@@ -12,6 +12,7 @@ export const API_CONFIG = {
       export: "/api/Balances/export/line/",
       stock: "/api/Exits/stock/",
       entries: "/api/Entries/Create",
+      historyEntries: "/api/Entries/history/",
       exits: "/api/Exits/CreateExit",
       update: "/api/Exits/UpdateExit/",
       delete: "/api/Exits/DeleteExit/",
