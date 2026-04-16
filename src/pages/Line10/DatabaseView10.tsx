@@ -21,6 +21,7 @@ import { useExitHistory } from "../../hooks/useExitHistory";
 import { useEntryMutations } from "../../hooks/useEntryMutations";
 import { useExitMutations } from "../../hooks/useExitMutations";
 import { formatDate } from "../../utils/formatDate";
+import { EditTransactionModal } from "../../components/Modals/EditTransactionModal";
 
 const LINE_ID = 9;
 const ITEMS_PER_PAGE = 10;
@@ -701,6 +702,16 @@ export const DatabaseView10 = () => {
           </div>
         )}
       </div>
+
+      <EditTransactionModal
+        isOpen={editingRecord !== null}
+        onClose={() => setEditingRecord(null)}
+        record={editingRecord}
+        onSuccess={() => {
+          handleGlobalRefetch();
+          setEditingRecord(null);
+        }}
+      />
     </div>
   );
 };
