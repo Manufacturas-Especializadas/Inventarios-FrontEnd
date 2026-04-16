@@ -4,12 +4,14 @@ import type {
   EntryHeader,
   ExitHeader,
   ExitUpdate,
+  HistoryEntry,
   Stock,
 } from "../../types/Types";
 import { apiClient } from "../client";
 
 class L10Service {
   private getAllEndpoint = API_CONFIG.endpoints.L10.getAll;
+  private getHistoryEntriesEndpoint = API_CONFIG.endpoints.L10.historyEntries;
   private exportToExcelEndpoint = API_CONFIG.endpoints.L10.export;
   private stockEndpoint = API_CONFIG.endpoints.L10.stock;
   private createEndpoint = API_CONFIG.endpoints.L10.entries;
@@ -47,6 +49,12 @@ class L10Service {
 
     link.remove();
     window.URL.revokeObjectURL(url);
+  }
+
+  async getHistoryEntries(lineId: number): Promise<HistoryEntry[]> {
+    return apiClient.get<HistoryEntry[]>(
+      `${this.getHistoryEntriesEndpoint}${lineId}`,
+    );
   }
 
   async getStock(lineId: number, partNumber: string): Promise<Stock> {
