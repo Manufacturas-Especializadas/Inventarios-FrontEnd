@@ -25,6 +25,19 @@ export interface EntryDetail {
   quantity: number;
 }
 
+export interface HistoryEntry {
+  id: number;
+  lineId: number;
+  createdAt: string;
+  details: HistoryDetailsEntry[];
+}
+
+export interface HistoryDetailsEntry {
+  partNumber: string;
+  client: string;
+  quantity: number;
+}
+
 export interface ExitHeader {
   lineId: number;
   shopOrder1: string;
