@@ -41,3 +41,21 @@ export interface ExitDetail {
   client: string;
   quantity: number;
 }
+
+export interface ExitUpdate {
+  id: number;
+  lineId: number;
+  shopOrder1: string;
+  shopOrder2: string;
+  shopOrder3: string;
+  shopOrder4: string;
+  shopOrder5: string;
+  shopOrder6: string;
+  details: UpdateDetail[];
+}
+
+export interface UpdateDetail {
+  partNumber: string;
+  client: string;
+  quantity: number;
+}
