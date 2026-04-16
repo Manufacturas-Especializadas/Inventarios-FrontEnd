@@ -13,6 +13,8 @@ export const API_CONFIG = {
       stock: "/api/Exits/stock/",
       entries: "/api/Entries/Create",
       exits: "/api/Exits/CreateExit",
+      update: "/api/Exits/UpdateExit/",
+      delete: "/api/Exits/DeleteExit/",
     },
   },
 };
