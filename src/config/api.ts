@@ -14,6 +14,7 @@ export const API_CONFIG = {
       entries: "/api/Entries/Create",
       historyEntries: "/api/Entries/history/",
       updateEntries: "/api/Entries/UpdateEntry/",
+      deleteEntries: "/api/Entries/DeleteEntry/",
       exits: "/api/Exits/CreateExit",
       update: "/api/Exits/UpdateExit/",
       delete: "/api/Exits/DeleteExit/",
