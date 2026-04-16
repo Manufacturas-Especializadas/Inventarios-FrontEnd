@@ -38,6 +38,18 @@ export interface HistoryDetailsEntry {
   quantity: number;
 }
 
+export interface EntryUpdate {
+  id: number;
+  lineId: number;
+  details: EntryUpdateDetail[];
+}
+
+export interface EntryUpdateDetail {
+  partNumber: string;
+  client: string;
+  quantity: number;
+}
+
 export interface ExitHeader {
   lineId: number;
   shopOrder1: string;
