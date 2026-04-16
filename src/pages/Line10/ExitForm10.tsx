@@ -93,11 +93,13 @@ export const ExitForm10 = () => {
       e.preventDefault();
       const partNumber = items[index].partNumber.trim();
 
-      const newItems = [...items];
-      newItems[index].errorMsg = "";
-      setItems(newItems);
-
       if (!partNumber) return;
+
+      setItems((prev) => {
+        const newItems = [...prev];
+        newItems[index].errorMsg = "";
+        return newItems;
+      });
 
       const duplicateIndex = items.findIndex(
         (item, i) =>
@@ -107,13 +109,13 @@ export const ExitForm10 = () => {
 
       if (duplicateIndex !== -1) {
         toast.error(`El número ${partNumber} ya fue escaneado arriba.`);
-
-        const errorItems = [...items];
-        errorItems[index].partNumber = "";
-        errorItems[index].client = "";
-        errorItems[index].currentStock = 0;
-        setItems(errorItems);
-
+        setItems((prev) => {
+          const errorItems = [...prev];
+          errorItems[index].partNumber = "";
+          errorItems[index].client = "";
+          errorItems[index].currentStock = 0;
+          return errorItems;
+        });
         quantityRefs.current[duplicateIndex]?.focus();
         return;
       }
@@ -121,12 +123,17 @@ export const ExitForm10 = () => {
       try {
         const stockData = await l10Service.getStock(9, partNumber);
 
-        const successItems = [...items];
-        successItems[index].currentStock = stockData.stock;
-        successItems[index].errorMsg = "";
-        setItems(successItems);
+        const actualStock =
+          stockData.stock ?? (stockData as any).data?.stock ?? 0;
 
-        if (stockData.stock === 0) {
+        setItems((prev) => {
+          const successItems = [...prev];
+          successItems[index].currentStock = actualStock;
+          successItems[index].errorMsg = "";
+          return successItems;
+        });
+
+        if (actualStock === 0) {
           toast.error(`Atención: ${partNumber} no tiene stock disponible (0)`);
         }
 
@@ -142,11 +149,13 @@ export const ExitForm10 = () => {
           const errorMessage = `Este número de parte nunca ha ingresado a la línea.`;
           toast.error(errorMessage);
 
-          const errorItems = [...items];
-          errorItems[index].partNumber = "";
-          errorItems[index].errorMsg = errorMessage;
-          errorItems[index].currentStock = 0;
-          setItems(errorItems);
+          setItems((prev) => {
+            const errorItems = [...prev];
+            errorItems[index].partNumber = "";
+            errorItems[index].errorMsg = errorMessage;
+            errorItems[index].currentStock = 0;
+            return errorItems;
+          });
         } else {
           toast.error("Error de conexión al verificar stock");
         }
