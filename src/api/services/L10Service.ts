@@ -2,6 +2,7 @@ import { API_CONFIG } from "../../config/api";
 import type {
   Balance,
   EntryHeader,
+  EntryUpdate,
   ExitHeader,
   ExitUpdate,
   HistoryEntry,
@@ -15,6 +16,7 @@ class L10Service {
   private exportToExcelEndpoint = API_CONFIG.endpoints.L10.export;
   private stockEndpoint = API_CONFIG.endpoints.L10.stock;
   private createEndpoint = API_CONFIG.endpoints.L10.entries;
+  private updateEntriesEndpoint = API_CONFIG.endpoints.L10.updateEntries;
   private createExitEndpoint = API_CONFIG.endpoints.L10.exits;
   private updateExitEndpoint = API_CONFIG.endpoints.L10.update;
   private deleteExitEndpoint = API_CONFIG.endpoints.L10.delete;
@@ -63,6 +65,10 @@ class L10Service {
 
   async create(data: EntryHeader): Promise<void> {
     return apiClient.post(this.createEndpoint, data);
+  }
+
+  async updateEntries(data: EntryUpdate, id: number): Promise<void> {
+    return apiClient.put<void>(`${this.updateEntriesEndpoint}${id}`, data);
   }
 
   async createExit(data: ExitHeader): Promise<void> {
