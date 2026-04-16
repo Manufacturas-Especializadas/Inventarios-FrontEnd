@@ -3,6 +3,7 @@ import type {
   Balance,
   EntryHeader,
   ExitHeader,
+  ExitUpdate,
   Stock,
 } from "../../types/Types";
 import { apiClient } from "../client";
@@ -13,6 +14,8 @@ class L10Service {
   private stockEndpoint = API_CONFIG.endpoints.L10.stock;
   private createEndpoint = API_CONFIG.endpoints.L10.entries;
   private createExitEndpoint = API_CONFIG.endpoints.L10.exits;
+  private updateExitEndpoint = API_CONFIG.endpoints.L10.update;
+  private deleteExitEndpoint = API_CONFIG.endpoints.L10.delete;
 
   async getAll(lineId: number): Promise<Balance[]> {
     return apiClient.get<Balance[]>(`${this.getAllEndpoint}${lineId}`);
@@ -56,6 +59,14 @@ class L10Service {
 
   async createExit(data: ExitHeader): Promise<void> {
     return apiClient.post(this.createExitEndpoint, data);
+  }
+
+  async update(data: ExitUpdate, id: number): Promise<void> {
+    return apiClient.put(`${this.updateExitEndpoint}${id}`, data);
+  }
+
+  async delete(id: number): Promise<void> {
+    return apiClient.delete(`${this.deleteExitEndpoint}${id}`);
   }
 }
 
