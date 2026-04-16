@@ -17,6 +17,7 @@ class L10Service {
   private stockEndpoint = API_CONFIG.endpoints.L10.stock;
   private createEndpoint = API_CONFIG.endpoints.L10.entries;
   private updateEntriesEndpoint = API_CONFIG.endpoints.L10.updateEntries;
+  private deleteEntriesEndpoint = API_CONFIG.endpoints.L10.deleteEntries;
   private createExitEndpoint = API_CONFIG.endpoints.L10.exits;
   private updateExitEndpoint = API_CONFIG.endpoints.L10.update;
   private deleteExitEndpoint = API_CONFIG.endpoints.L10.delete;
@@ -69,6 +70,10 @@ class L10Service {
 
   async updateEntries(data: EntryUpdate, id: number): Promise<void> {
     return apiClient.put<void>(`${this.updateEntriesEndpoint}${id}`, data);
+  }
+
+  async deleteEntries(id: number): Promise<void> {
+    return apiClient.delete(`${this.deleteEntriesEndpoint}${id}`);
   }
 
   async createExit(data: ExitHeader): Promise<void> {
