@@ -6,6 +6,7 @@ import type {
   ExitHeader,
   ExitUpdate,
   HistoryEntry,
+  HistoryExits,
   Stock,
 } from "../../types/Types";
 import { apiClient } from "../client";
@@ -13,6 +14,7 @@ import { apiClient } from "../client";
 class L10Service {
   private getAllEndpoint = API_CONFIG.endpoints.L10.getAll;
   private getHistoryEntriesEndpoint = API_CONFIG.endpoints.L10.historyEntries;
+  private getHistoryExitsEndpoint = API_CONFIG.endpoints.L10.historyExits;
   private exportToExcelEndpoint = API_CONFIG.endpoints.L10.export;
   private stockEndpoint = API_CONFIG.endpoints.L10.stock;
   private createEndpoint = API_CONFIG.endpoints.L10.entries;
@@ -57,6 +59,12 @@ class L10Service {
   async getHistoryEntries(lineId: number): Promise<HistoryEntry[]> {
     return apiClient.get<HistoryEntry[]>(
       `${this.getHistoryEntriesEndpoint}${lineId}`,
+    );
+  }
+
+  async getHistoryExits(lineId: number): Promise<HistoryExits[]> {
+    return apiClient.get<HistoryExits[]>(
+      `${this.getHistoryExitsEndpoint}${lineId}`,
     );
   }
 
