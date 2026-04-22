@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useInventoryEntry } from "../../hooks/useInventoryEntry";
 import type { EntryDetail, EntryHeader } from "../../types/Types";
+import toast from "react-hot-toast";
 
 const L12_LINE_ID = 11;
 
@@ -94,6 +95,7 @@ export const L12EntryForm = () => {
       {} as Record<string, EntryDetail[]>,
     );
 
+    const globalLoadingToast = toast.loading("Registrando entradas...");
     let allSuccess = true;
 
     for (const [currentShopOrder, groupDetails] of Object.entries(
@@ -105,14 +107,23 @@ export const L12EntryForm = () => {
         details: groupDetails,
       };
 
-      const success = await submitEntry(payload);
+      const success = await submitEntry(payload, false);
+
       if (!success) {
         allSuccess = false;
+        break;
       }
     }
 
     if (allSuccess) {
+      toast.success("Entradas registradas correctamente", {
+        id: globalLoadingToast,
+      });
       setDetails(Array.from({ length: 10 }, () => ({ ...emptyRow })));
+    } else {
+      toast.error("Ocurrió un error al registrar algunas entradas", {
+        id: globalLoadingToast,
+      });
     }
   };
 
