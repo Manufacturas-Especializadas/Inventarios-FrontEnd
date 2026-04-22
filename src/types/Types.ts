@@ -6,7 +6,7 @@ export interface Balance {
   stock: number;
   lastEntryDate: string;
   lastExitDate: string;
-  shopOrders: string;
+  exitShopOrders: string;
 }
 
 export interface Stock {
