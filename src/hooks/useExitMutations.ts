@@ -44,7 +44,7 @@ export const useExitMutations = () => {
     const loadingToast = toast.loading("Eliminando registro...");
 
     try {
-      await l10Service.delete(id);
+      await lService.delete(id);
       toast.success("Salida eliminada correctamente", { id: loadingToast });
 
       return true;
