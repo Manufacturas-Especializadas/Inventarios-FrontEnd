@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ExitUpdate } from "../types/Types";
 import toast from "react-hot-toast";
-import { l10Service } from "../api/services/L10Service";
+import { lService } from "../api/services/LService";
 
 export const useExitMutations = () => {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -12,7 +12,7 @@ export const useExitMutations = () => {
     const loadingToast = toast.loading("Actualizando salida...");
 
     try {
-      await l10Service.update(data, id);
+      await lService.update(data, id);
       toast.success("Salida actualizada correctamente", { id: loadingToast });
       return true;
     } catch (error: any) {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import type { Balance } from "../types/Types";
-import { l10Service } from "../api/services/L10Service";
+import { lService } from "../api/services/LService";
 
 export const useInventoryBalance = (lineId: number) => {
   const [balances, setBalances] = useState<Balance[]>([]);
@@ -10,7 +10,7 @@ export const useInventoryBalance = (lineId: number) => {
   const fetchBalances = async () => {
     setIsLoading(true);
     try {
-      const data = await l10Service.getAll(lineId);
+      const data = await lService.getAll(lineId);
       setBalances(data);
     } catch (error) {
       console.error("Error cargando balance:", error);

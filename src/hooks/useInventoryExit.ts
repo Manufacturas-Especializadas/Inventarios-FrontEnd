@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ExitHeader } from "../types/Types";
 import toast from "react-hot-toast";
-import { l10Service } from "../api/services/L10Service";
+import { lService } from "../api/services/LService";
 
 export const useInventoryExit = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,7 +22,7 @@ export const useInventoryExit = () => {
     const loadingToast = toast.loading("Registrando salida...");
 
     try {
-      await l10Service.createExit(data);
+      await lService.createExit(data);
       toast.success("Salida registrada correctamente", { id: loadingToast });
 
       return true;

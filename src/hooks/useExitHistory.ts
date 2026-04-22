@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
-import { l10Service } from "../api/services/L10Service";
+import { lService } from "../api/services/LService";
 import type { HistoryExits } from "../types/Types";
 
 export const useExitHistory = (lineId: number) => {
@@ -10,7 +10,7 @@ export const useExitHistory = (lineId: number) => {
   const fetchHistory = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await l10Service.getHistoryExits(lineId);
+      const data = await lService.getHistoryExits(lineId);
       setHistory(data);
     } catch (error) {
       console.error("Error cargando historial de salidas:", error);

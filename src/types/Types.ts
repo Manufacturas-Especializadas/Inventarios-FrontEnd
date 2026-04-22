@@ -2,11 +2,13 @@ export interface Balance {
   partNumber: string;
   client: string;
   totalEntries: number;
+  totalBoxes: number;
   totalExits: number;
   stock: number;
   lastEntryDate: string;
-  lastExitDate: string;
-  shopOrders: string;
+  lastExitDate: any;
+  exitShopOrders: string;
+  entryShopOrders: string;
 }
 
 export interface Stock {
@@ -16,19 +18,22 @@ export interface Stock {
 
 export interface EntryHeader {
   lineId: number;
+  shopOrder?: string;
   details: EntryDetail[];
 }
 
 export interface EntryDetail {
   partNumber: string;
-  client: string;
+  client?: string;
   quantity: number;
+  boxesQuantity?: number;
 }
 
 export interface HistoryEntry {
   id: number;
   lineId: number;
   createdAt: string;
+  shopOrder: string;
   details: HistoryDetailsEntry[];
 }
 
@@ -36,6 +41,7 @@ export interface HistoryDetailsEntry {
   partNumber: string;
   client: string;
   quantity: number;
+  boxesQuantity: number;
 }
 
 export interface EntryUpdate {
@@ -48,6 +54,7 @@ export interface EntryUpdateDetail {
   partNumber: string;
   client: string;
   quantity: number;
+  boxesQuantity: number;
 }
 
 export interface ExitHeader {

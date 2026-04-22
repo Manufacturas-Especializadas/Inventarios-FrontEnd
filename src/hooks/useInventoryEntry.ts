@@ -1,21 +1,24 @@
 import { useState } from "react";
 import type { EntryHeader } from "../types/Types";
 import toast from "react-hot-toast";
-import { l10Service } from "../api/services/L10Service";
+import { lService } from "../api/services/LService";
 
 export const useInventoryEntry = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submitEntry = async (data: EntryHeader) => {
+  const submitEntry = async (data: EntryHeader, showToast: boolean = true) => {
     if (data.details.length === 0) {
       return toast.error("Debe agregar al menos un número de parte");
     }
 
     setIsSubmitting(true);
-    const loadingToast = toast.loading("Registrando entrada");
+    let loadingToast: string | undefined;
+    if (showToast) {
+      loadingToast = toast.loading("Registrando entrada");
+    }
 
     try {
-      await l10Service.create(data);
+      await lService.create(data);
 
       toast.success("Entrada registrada correctamente", { id: loadingToast });
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { l10Service } from "../api/services/L10Service";
+import { lService } from "../api/services/LService";
 
 export const useExportExcel = () => {
   const [isExporting, setIsExporting] = useState(false);
@@ -10,7 +10,7 @@ export const useExportExcel = () => {
     const toastId = toast.loading("Generando archivo Excel...");
 
     try {
-      await l10Service.exportToExcel(lineId, lineName);
+      await lService.exportToExcel(lineId, lineName);
       toast.success("Excel descargado correctamente", { id: toastId });
     } catch (error) {
       console.error("Error al exportar:", error);

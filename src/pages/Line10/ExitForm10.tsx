@@ -3,7 +3,7 @@ import { FormField } from "../../components/FormField/FormField";
 import { useInventoryExit } from "../../hooks/useInventoryExit";
 import React, { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { l10Service } from "../../api/services/L10Service";
+import { lService } from "../../api/services/LService";
 import { useNavigate } from "react-router-dom";
 import type { ExitHeader } from "../../types/Types";
 
@@ -121,7 +121,7 @@ export const ExitForm10 = () => {
       }
 
       try {
-        const stockData = await l10Service.getStock(9, partNumber);
+        const stockData = await lService.getStock(9, partNumber);
 
         const actualStock =
           stockData.stock ?? (stockData as any).data?.stock ?? 0;

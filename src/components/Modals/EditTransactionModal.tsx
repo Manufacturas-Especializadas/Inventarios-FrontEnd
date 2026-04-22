@@ -34,6 +34,7 @@ export const EditTransactionModal = ({
   useEffect(() => {
     if (record && isOpen) {
       setItems([...record.data.details]);
+
       if (record.type === "exit") {
         setShopOrders([
           record.data.shopOrder1 || "",
@@ -43,6 +44,8 @@ export const EditTransactionModal = ({
           record.data.shopOrder5 || "",
           record.data.shopOrder6 || "",
         ]);
+      } else if (record.type === "entry" && record.data.lineId === 11) {
+        setShopOrders([record.data.shopOrder || "", "", "", "", "", ""]);
       }
     }
   }, [record, isOpen]);
@@ -50,6 +53,7 @@ export const EditTransactionModal = ({
   if (!isOpen || !record) return null;
 
   const isEntry = record.type === "entry";
+  const isL12 = record.data.lineId === 11;
 
   const handleItemChange = (
     index: number,
@@ -68,7 +72,10 @@ export const EditTransactionModal = ({
   };
 
   const addRow = () => {
-    setItems((prev) => [...prev, { partNumber: "", client: "", quantity: 0 }]);
+    setItems((prev) => [
+      ...prev,
+      { partNumber: "", client: "", quantity: 0, boxesQuantity: 0 },
+    ]);
   };
 
   const removeRow = (index: number) => {
@@ -88,17 +95,28 @@ export const EditTransactionModal = ({
     let success = false;
 
     if (isEntry) {
-      const data = {
+      if (isL12 && !shopOrders[0].trim()) {
+        alert("La Shop Order es obligatoria para las entradas de esta línea.");
+        return;
+      }
+
+      const data: any = {
         id: record.data.id,
         lineId: record.data.lineId,
         details: validItems,
       };
+
+      if (isL12) {
+        data.shopOrder = shopOrders[0].trim();
+      }
+
       success = await updateEntry(record.data.id, data);
     } else {
       if (!shopOrders[0].trim()) {
         alert("La Shop Order 1 es obligatoria para las salidas.");
         return;
       }
+
       const data = {
         id: record.data.id,
         lineId: record.data.lineId,
@@ -130,11 +148,17 @@ export const EditTransactionModal = ({
         flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200"
       >
         <div
-          className={`px-6 py-4 border-b flex items-center justify-between ${isEntry ? "bg-emerald-50 border-emerald-100" : "bg-orange-50 border-orange-100"}`}
+          className={`px-6 py-4 border-b flex items-center justify-between ${
+            isEntry
+              ? "bg-emerald-50 border-emerald-100"
+              : "bg-orange-50 border-orange-100"
+          }`}
         >
           <div>
             <h3
-              className={`text-lg font-black ${isEntry ? "text-emerald-800" : "text-orange-800"}`}
+              className={`text-lg font-black ${
+                isEntry ? "text-emerald-800" : "text-orange-800"
+              }`}
             >
               Editar {isEntry ? "Entrada" : "Salida"} #{record.data.id}
             </h3>
@@ -152,7 +176,7 @@ export const EditTransactionModal = ({
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50">
-          {!isEntry && (
+          {(!isEntry || (isEntry && isL12)) && (
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
               <h4
                 className="text-[11px] font-black text-slate-400 uppercase tracking-widest 
@@ -161,17 +185,25 @@ export const EditTransactionModal = ({
                 <AlertCircle size={14} /> Shop Orders
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                {shopOrders.map((so, i) => (
+                {shopOrders.slice(0, isEntry && isL12 ? 1 : 6).map((so, i) => (
                   <div key={i} className="flex flex-col gap-1">
                     <label
-                      className={`text-[10px] font-bold uppercase ml-1 ${i === 0 ? "text-orange-600" : "text-slate-400"}`}
+                      className={`text-[10px] font-bold uppercase ml-1 ${
+                        i === 0
+                          ? isEntry
+                            ? "text-emerald-600"
+                            : "text-orange-600"
+                          : "text-slate-400"
+                      }`}
                     >
                       SO {i + 1} {i === 0 && "*"}
                     </label>
                     <input
                       className={`px-3 py-2 rounded-lg border text-sm font-bold outline-none focus:ring-2 ${
                         i === 0
-                          ? "border-orange-200 bg-orange-50 focus:ring-orange-500"
+                          ? isEntry
+                            ? "border-emerald-200 bg-emerald-50 focus:ring-emerald-500"
+                            : "border-orange-200 bg-orange-50 focus:ring-orange-500"
                           : "border-slate-200 bg-slate-50 focus:ring-blue-500"
                       }`}
                       value={so}
@@ -213,25 +245,28 @@ export const EditTransactionModal = ({
                     <X size={12} />
                   </button>
 
-                  <div className="flex-1 min-w-37.5">
+                  <div className="flex-1 min-w-30">
                     <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">
                       No. Parte
                     </label>
                     <input
-                      className="w-full bg-white p-2 rounded-lg text-sm font-mono border border-slate-200 outline-none focus:border-blue-400"
+                      className="w-full bg-white p-2 rounded-lg text-sm font-mono border 
+                      border-slate-200 outline-none focus:border-blue-400"
                       value={item.partNumber}
                       onChange={(e) =>
                         handleItemChange(index, "partNumber", e.target.value)
                       }
                     />
                   </div>
+
                   <div className="w-24">
                     <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">
-                      Cantidad
+                      Piezas
                     </label>
                     <input
                       type="number"
-                      className="w-full bg-white p-2 rounded-lg text-sm font-bold border border-slate-200 outline-none focus:border-blue-400 text-right"
+                      className="w-full bg-white p-2 rounded-lg text-sm font-bold border 
+                      border-slate-200 outline-none focus:border-blue-400 text-right"
                       value={item.quantity || ""}
                       onChange={(e) =>
                         handleItemChange(
@@ -242,7 +277,29 @@ export const EditTransactionModal = ({
                       }
                     />
                   </div>
-                  <div className="w-24">
+
+                  {isL12 && (
+                    <div className="w-24">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">
+                        Cajas
+                      </label>
+                      <input
+                        type="number"
+                        className="w-full bg-white p-2 rounded-lg text-sm font-bold border 
+                        border-slate-200 outline-none focus:border-blue-400 text-right"
+                        value={item.boxesQuantity || ""}
+                        onChange={(e) =>
+                          handleItemChange(
+                            index,
+                            "boxesQuantity",
+                            Number(e.target.value),
+                          )
+                        }
+                      />
+                    </div>
+                  )}
+
+                  <div className="w-32">
                     <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">
                       Cliente
                     </label>
