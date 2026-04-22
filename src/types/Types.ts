@@ -2,11 +2,13 @@ export interface Balance {
   partNumber: string;
   client: string;
   totalEntries: number;
+  totalBoxes: number;
   totalExits: number;
   stock: number;
   lastEntryDate: string;
-  lastExitDate: string;
+  lastExitDate: any;
   exitShopOrders: string;
+  entryShopOrders: string;
 }
 
 export interface Stock {
