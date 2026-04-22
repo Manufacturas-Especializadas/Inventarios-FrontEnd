@@ -33,6 +33,7 @@ export interface HistoryEntry {
   id: number;
   lineId: number;
   createdAt: string;
+  shopOrder: string;
   details: HistoryDetailsEntry[];
 }
 
@@ -40,6 +41,7 @@ export interface HistoryDetailsEntry {
   partNumber: string;
   client: string;
   quantity: number;
+  boxesQuantity: number;
 }
 
 export interface EntryUpdate {
