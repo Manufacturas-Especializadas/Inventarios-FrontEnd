@@ -52,6 +52,7 @@ export interface EntryUpdateDetail {
   partNumber: string;
   client: string;
   quantity: number;
+  boxesQuantity: number;
 }
 
 export interface ExitHeader {
