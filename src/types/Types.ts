@@ -16,6 +16,7 @@ export interface Stock {
 
 export interface EntryHeader {
   lineId: number;
+  shopOrder: string;
   details: EntryDetail[];
 }
 
@@ -23,6 +24,7 @@ export interface EntryDetail {
   partNumber: string;
   client: string;
   quantity: number;
+  boxesQuantity: number;
 }
 
 export interface HistoryEntry {
