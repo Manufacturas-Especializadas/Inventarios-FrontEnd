@@ -266,6 +266,7 @@ export const DatabaseView10 = () => {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
+            lineId={9}
           />
         )}
         {activeTab === "entries" && (
