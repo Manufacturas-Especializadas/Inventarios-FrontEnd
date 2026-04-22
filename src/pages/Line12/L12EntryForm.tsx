@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useInventoryEntry } from "../../hooks/useInventoryEntry";
 import type { EntryDetail, EntryHeader } from "../../types/Types";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const L12_LINE_ID = 11;
 
@@ -21,6 +22,7 @@ const emptyRow: UIEntryRow = {
 
 export const L12EntryForm = () => {
   const { submitEntry, isSubmitting } = useInventoryEntry();
+  const navigate = useNavigate();
 
   const [details, setDetails] = useState<UIEntryRow[]>(
     Array.from({ length: 10 }, () => ({ ...emptyRow })),
@@ -140,6 +142,16 @@ export const L12EntryForm = () => {
           Ingresa los detalles. Los registros se agruparán automáticamente por
           Shop Order.
         </p>
+
+        <div className="flex justify-end">
+          <button>SALIDAS</button>
+          <button
+            onClick={() => navigate("/base-de-datos-l12")}
+            className="hover:cursor-pointer"
+          >
+            BASE DE DATOS
+          </button>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
