@@ -36,7 +36,7 @@ export const useEntryMutations = () => {
     const loadingToast = toast.loading("Eliminando registro...");
 
     try {
-      await l10Service.deleteEntries(id);
+      await lService.deleteEntries(id);
       toast.success("Entrada eliminada correctamente", { id: loadingToast });
       return true;
     } catch (error) {
