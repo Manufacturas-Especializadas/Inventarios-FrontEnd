@@ -12,17 +12,17 @@ import type {
 import { apiClient } from "../client";
 
 class LService {
-  private getAllEndpoint = API_CONFIG.endpoints.L10.getAll;
-  private getHistoryEntriesEndpoint = API_CONFIG.endpoints.L10.historyEntries;
-  private getHistoryExitsEndpoint = API_CONFIG.endpoints.L10.historyExits;
-  private exportToExcelEndpoint = API_CONFIG.endpoints.L10.export;
-  private stockEndpoint = API_CONFIG.endpoints.L10.stock;
-  private createEndpoint = API_CONFIG.endpoints.L10.entries;
-  private updateEntriesEndpoint = API_CONFIG.endpoints.L10.updateEntries;
-  private deleteEntriesEndpoint = API_CONFIG.endpoints.L10.deleteEntries;
-  private createExitEndpoint = API_CONFIG.endpoints.L10.exits;
-  private updateExitEndpoint = API_CONFIG.endpoints.L10.update;
-  private deleteExitEndpoint = API_CONFIG.endpoints.L10.delete;
+  private getAllEndpoint = API_CONFIG.endpoints.Lines.getAll;
+  private getHistoryEntriesEndpoint = API_CONFIG.endpoints.Lines.historyEntries;
+  private getHistoryExitsEndpoint = API_CONFIG.endpoints.Lines.historyExits;
+  private exportToExcelEndpoint = API_CONFIG.endpoints.Lines.export;
+  private stockEndpoint = API_CONFIG.endpoints.Lines.stock;
+  private createEndpoint = API_CONFIG.endpoints.Lines.entries;
+  private updateEntriesEndpoint = API_CONFIG.endpoints.Lines.updateEntries;
+  private deleteEntriesEndpoint = API_CONFIG.endpoints.Lines.deleteEntries;
+  private createExitEndpoint = API_CONFIG.endpoints.Lines.exits;
+  private updateExitEndpoint = API_CONFIG.endpoints.Lines.update;
+  private deleteExitEndpoint = API_CONFIG.endpoints.Lines.delete;
 
   async getAll(lineId: number): Promise<Balance[]> {
     return apiClient.get<Balance[]>(`${this.getAllEndpoint}${lineId}`);
