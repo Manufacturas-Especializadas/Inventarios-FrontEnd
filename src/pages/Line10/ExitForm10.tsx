@@ -3,7 +3,7 @@ import { FormField } from "../../components/FormField/FormField";
 import { useInventoryExit } from "../../hooks/useInventoryExit";
 import React, { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { l10Service } from "../../api/services/L10Service";
+import { l10Service } from "../../api/services/LService";
 import { useNavigate } from "react-router-dom";
 import type { ExitHeader } from "../../types/Types";
 

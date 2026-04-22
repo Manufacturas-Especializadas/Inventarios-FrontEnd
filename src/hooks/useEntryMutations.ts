@@ -1,6 +1,6 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { l10Service } from "../api/services/L10Service";
+import { lService } from "../api/services/LService";
 import type { EntryUpdate } from "../types/Types";
 
 export const useEntryMutations = () => {
@@ -11,7 +11,7 @@ export const useEntryMutations = () => {
     const loadingToast = toast.loading("Actualizando entrada...");
 
     try {
-      await l10Service.updateEntries(data, id);
+      await lService.updateEntries(data, id);
       toast.success("Entrada actualizada correctamente", { id: loadingToast });
       return true;
     } catch (error) {

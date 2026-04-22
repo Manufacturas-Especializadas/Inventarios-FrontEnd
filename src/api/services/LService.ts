@@ -11,7 +11,7 @@ import type {
 } from "../../types/Types";
 import { apiClient } from "../client";
 
-class L10Service {
+class LService {
   private getAllEndpoint = API_CONFIG.endpoints.L10.getAll;
   private getHistoryEntriesEndpoint = API_CONFIG.endpoints.L10.historyEntries;
   private getHistoryExitsEndpoint = API_CONFIG.endpoints.L10.historyExits;
@@ -97,4 +97,4 @@ class L10Service {
   }
 }
 
-export const l10Service = new L10Service();
+export const lService = new LService();
