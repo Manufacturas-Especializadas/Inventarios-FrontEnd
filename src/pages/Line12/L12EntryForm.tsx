@@ -1,4 +1,4 @@
-import { useState, type SyntheticEvent } from "react";
+import { useState, useRef, type SyntheticEvent } from "react";
 import { useInventoryEntry } from "../../hooks/useInventoryEntry";
 import type { EntryDetail, EntryHeader } from "../../types/Types";
 import toast from "react-hot-toast";
@@ -29,6 +29,11 @@ export const L12EntryForm = () => {
     Array.from({ length: 10 }, () => ({ ...emptyRow })),
   );
 
+  const shopOrderRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const partNumberRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const qtyRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const boxesRefs = useRef<(HTMLInputElement | null)[]>([]);
+
   const handleAddRow = () => {
     setDetails([...details, { ...emptyRow }]);
   };
@@ -50,7 +55,10 @@ export const L12EntryForm = () => {
       typeof value === "string" &&
       (field === "shopOrder" || field === "partNumber")
     ) {
-      sanitizedValue = value.replace(/'/g, "-").replace(/\?/g, "_");
+      sanitizedValue = value
+        .replace(/'/g, "-")
+        .replace(/\?/g, "_")
+        .toUpperCase();
     }
 
     // @ts-ignore
@@ -61,14 +69,57 @@ export const L12EntryForm = () => {
 
       if (soValue.startsWith("G")) {
         newDetails[index].client = "DAIKIN";
-      } else if (soValue.toUpperCase().startsWith("LEN")) {
+      } else if (soValue.startsWith("LEN")) {
         newDetails[index].client = "LENNOX";
       } else {
         newDetails[index].client = "";
       }
     }
 
+    const currentRow = newDetails[index];
+    if (
+      currentRow.client === "DAIKIN" &&
+      currentRow.partNumber !== "0227A00293"
+    ) {
+      currentRow.boxesQuantity = 8;
+    }
+
     setDetails(newDetails);
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number,
+    field: "shopOrder" | "partNumber" | "quantity" | "boxesQuantity",
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+
+      const currentRow = details[index];
+      const isBoxesLocked =
+        currentRow.client === "DAIKIN" &&
+        currentRow.partNumber !== "0227A00293";
+
+      if (field === "shopOrder") {
+        partNumberRefs.current[index]?.focus();
+      } else if (field === "partNumber") {
+        qtyRefs.current[index]?.focus();
+      } else if (field === "quantity") {
+        if (isBoxesLocked) {
+          const nextIndex = index + 1;
+          if (nextIndex < details.length) {
+            shopOrderRefs.current[nextIndex]?.focus();
+          }
+        } else {
+          boxesRefs.current[index]?.focus();
+        }
+      } else if (field === "boxesQuantity") {
+        const nextIndex = index + 1;
+        if (nextIndex < details.length) {
+          shopOrderRefs.current[nextIndex]?.focus();
+        }
+      }
+    }
   };
 
   const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
@@ -123,6 +174,8 @@ export const L12EntryForm = () => {
         id: globalLoadingToast,
       });
       setDetails(Array.from({ length: 10 }, () => ({ ...emptyRow })));
+      // Regresamos el foco a la primera celda
+      setTimeout(() => shopOrderRefs.current[0]?.focus(), 100);
     } else {
       toast.error("Ocurrió un error al registrar algunas entradas", {
         id: globalLoadingToast,
@@ -140,12 +193,13 @@ export const L12EntryForm = () => {
           Registro de Entrada - Línea 12
         </h2>
         <p className="text-sm text-gray-500">
-          Ingresa los detalles. Los registros se agruparán automáticamente por
-          Shop Order.
+          DAIKIN bloqueado a 8 cajas (excepto No. Parte 0227A00293). Todo se
+          convierte a mayúsculas automáticamente.
         </p>
 
-        <div className="flex justify-end gap-3">
+        <div className="flex justify-end gap-3 mt-4">
           <button
+            type="button"
             className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600
             rounded-lg font-semibold hover:bg-blue-100 transition-colors shadow-sm
             hover:cursor-pointer"
@@ -154,6 +208,7 @@ export const L12EntryForm = () => {
             SALIDAS
           </button>
           <button
+            type="button"
             onClick={() => navigate("/base-de-datos-l12")}
             className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white 
             rounded-lg font-semibold hover:bg-slate-900 transition-colors shadow-sm
@@ -187,6 +242,9 @@ export const L12EntryForm = () => {
               {details.map((detail, index) => {
                 const total =
                   (detail.quantity || 0) * (detail.boxesQuantity || 0);
+                const isBoxesLocked =
+                  detail.client === "DAIKIN" &&
+                  detail.partNumber !== "0227A00293";
 
                 return (
                   <tr
@@ -196,18 +254,25 @@ export const L12EntryForm = () => {
                     <td className="py-2 px-2">
                       <input
                         type="text"
+                        ref={(el) => {
+                          shopOrderRefs.current[index] = el;
+                        }}
                         value={detail.shopOrder}
                         onChange={(e) =>
                           handleChangeDetail(index, "shopOrder", e.target.value)
                         }
+                        onKeyDown={(e) => handleKeyDown(e, index, "shopOrder")}
                         placeholder="Ej. SO-123"
                         className="w-full px-3 py-1.5 border border-gray-300 rounded focus:ring-2 
-                        focus:ring-blue-500 outline-none text-sm"
+                        focus:ring-blue-500 outline-none text-sm font-medium"
                       />
                     </td>
                     <td className="py-2 px-2">
                       <input
                         type="text"
+                        ref={(el) => {
+                          partNumberRefs.current[index] = el;
+                        }}
                         value={detail.partNumber}
                         onChange={(e) =>
                           handleChangeDetail(
@@ -216,9 +281,10 @@ export const L12EntryForm = () => {
                             e.target.value,
                           )
                         }
+                        onKeyDown={(e) => handleKeyDown(e, index, "partNumber")}
                         placeholder="No. de Parte"
                         className="w-full px-3 py-1.5 border border-gray-300 rounded focus:ring-2 
-                        focus:ring-blue-500 outline-none text-sm"
+                        focus:ring-blue-500 outline-none text-sm font-medium"
                       />
                     </td>
                     <td className="py-2 px-2">
@@ -226,17 +292,16 @@ export const L12EntryForm = () => {
                         type="text"
                         disabled
                         value={detail.client || ""}
-                        onChange={(e) =>
-                          handleChangeDetail(index, "client", e.target.value)
-                        }
-                        className="w-full px-3 py-1.5 border border-gray-300 rounded focus:ring-2 
-                        focus:ring-blue-500 outline-none text-sm"
+                        className="w-full px-3 py-1.5 border border-gray-300 rounded text-sm bg-gray-50 font-semibold"
                       />
                     </td>
                     <td className="py-2 px-2">
                       <input
                         type="number"
                         min="1"
+                        ref={(el) => {
+                          qtyRefs.current[index] = el;
+                        }}
                         value={detail.quantity || ""}
                         onChange={(e) =>
                           handleChangeDetail(
@@ -245,6 +310,7 @@ export const L12EntryForm = () => {
                             parseInt(e.target.value) || 0,
                           )
                         }
+                        onKeyDown={(e) => handleKeyDown(e, index, "quantity")}
                         className="w-full px-3 py-1.5 border border-gray-300 rounded focus:ring-2 
                         focus:ring-blue-500 outline-none text-sm"
                       />
@@ -253,6 +319,10 @@ export const L12EntryForm = () => {
                       <input
                         type="number"
                         min="1"
+                        ref={(el) => {
+                          boxesRefs.current[index] = el;
+                        }}
+                        readOnly={isBoxesLocked}
                         value={detail.boxesQuantity || ""}
                         onChange={(e) =>
                           handleChangeDetail(
@@ -261,8 +331,15 @@ export const L12EntryForm = () => {
                             parseInt(e.target.value) || 0,
                           )
                         }
-                        className="w-full px-3 py-1.5 border border-gray-300 rounded focus:ring-2 
-                        focus:ring-blue-500 outline-none text-sm"
+                        onKeyDown={(e) =>
+                          handleKeyDown(e, index, "boxesQuantity")
+                        }
+                        className={`w-full px-3 py-1.5 border border-gray-300 rounded focus:ring-2 
+                        focus:ring-blue-500 outline-none text-sm ${
+                          isBoxesLocked
+                            ? "bg-gray-100 cursor-not-allowed font-bold text-blue-600"
+                            : ""
+                        }`}
                       />
                     </td>
                     <td className="py-2 px-2 text-center bg-blue-50/30">
@@ -274,7 +351,7 @@ export const L12EntryForm = () => {
                       <button
                         type="button"
                         onClick={() => handleRemoveRow(index)}
-                        className="text-red-500 hover:text-red-700 transition-colors p-1"
+                        className="text-red-500 hover:text-red-700 transition-colors p-1 hover:cursor-pointer"
                         title="Eliminar fila"
                       >
                         <svg
