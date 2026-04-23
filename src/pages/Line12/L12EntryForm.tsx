@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { useInventoryEntry } from "../../hooks/useInventoryEntry";
 import type { EntryDetail, EntryHeader } from "../../types/Types";
 import toast from "react-hot-toast";
@@ -71,7 +71,7 @@ export const L12EntryForm = () => {
     setDetails(newDetails);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const validDetails = details.filter(
