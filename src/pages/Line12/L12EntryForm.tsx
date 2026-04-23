@@ -3,6 +3,7 @@ import { useInventoryEntry } from "../../hooks/useInventoryEntry";
 import type { EntryDetail, EntryHeader } from "../../types/Types";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { DatabaseIcon, LogIn } from "lucide-react";
 
 const L12_LINE_ID = 11;
 
@@ -143,12 +144,22 @@ export const L12EntryForm = () => {
           Shop Order.
         </p>
 
-        <div className="flex justify-end">
-          <button>SALIDAS</button>
+        <div className="flex justify-end gap-3">
+          <button
+            className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600
+            rounded-lg font-semibold hover:bg-blue-100 transition-colors shadow-sm
+            hover:cursor-pointer"
+          >
+            <LogIn size={18} />
+            SALIDAS
+          </button>
           <button
             onClick={() => navigate("/base-de-datos-l12")}
-            className="hover:cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white 
+            rounded-lg font-semibold hover:bg-slate-900 transition-colors shadow-sm
+            hover:cursor-pointer"
           >
+            <DatabaseIcon size={18} />
             BASE DE DATOS
           </button>
         </div>
