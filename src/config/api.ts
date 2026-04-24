@@ -20,5 +20,10 @@ export const API_CONFIG = {
       update: "/api/Exits/UpdateExit/",
       delete: "/api/Exits/DeleteExit/",
     },
+    shipments: {
+      scan: "/api/Shipping/Scan",
+      release: "/api/Shipping/Release",
+      releaseId: "/api/Shipping/Release/",
+    },
   },
 };
