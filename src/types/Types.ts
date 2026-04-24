@@ -110,3 +110,26 @@ export interface UpdateDetail {
   client: string;
   quantity: number;
 }
+
+export interface ShippingRelease {
+  id: number;
+  shopOrder: string;
+  partNumber: string;
+  targetQuantity: number;
+  currentScans: number;
+  packerName: string;
+  status: number;
+  createdAt: string;
+}
+
+export interface CreateReleasePayload {
+  shopOrder: string;
+  partNumber: string;
+  targetQuantity: number;
+  packerName: string;
+}
+
+export interface RegisterScanPayload {
+  shippingReleaseId: number;
+  scannedLabelId: string;
+}
