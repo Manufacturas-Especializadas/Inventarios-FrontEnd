@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { DatabaseIcon, LogIn, Printer } from "lucide-react";
 import { useL12EntryForm } from "../../hooks/useL12EntryForm";
+import Logo from "../../assets/logomesa.png";
 import Barcode from "react-barcode";
 
 export const L12EntryForm = () => {
@@ -261,8 +262,9 @@ export const L12EntryForm = () => {
       </div>
 
       <div
-        className="hidden print:block print:absolute print:inset-0 print:bg-white 
-        print:z-9999"
+        className="hidden print:flex print:flex-col print:items-center 
+        print:gap-10 print:absolute print:inset-0 print:bg-white print:z-9999 
+        print:py-8"
       >
         {generatedFolios.map((item: any, index: number) => {
           let data = item;
@@ -276,35 +278,33 @@ export const L12EntryForm = () => {
           return (
             <div
               key={index}
-              className="w-[100mm] h-[50mm] flex items-center justify-between p-4 
-              bg-white text-black"
-              style={{ pageBreakAfter: "always" }}
+              className="w-[120mm] h-[65mm] flex items-center justify-between 
+              p-8 bg-white text-black border-2 border-dashed border-gray-400 
+              rounded-xl"
             >
-              <div className="flex flex-col items-center justify-center h-full gap-3 pl-2">
+              <div className="flex flex-col items-center justify-center h-full gap-3">
                 <Barcode
                   value={String(seqId)}
                   width={2.2}
-                  height={55}
-                  fontSize={18}
+                  height={50}
+                  fontSize={16}
                   font="monospace"
-                  textMargin={4}
+                  textMargin={6}
                   margin={0}
                   displayValue={true}
                 />
-                <div
-                  className="border-[3px] border-black rounded-full px-5 py-0.5 
-                  mt-1 flex items-center justify-center"
-                >
-                  <span className="font-black text-xl tracking-widest uppercase">
-                    MESA
-                  </span>
-                </div>
+
+                <img
+                  src={Logo}
+                  alt="Logo MESA"
+                  className="h-8 object-contain mt-1 grayscale"
+                />
               </div>
 
-              <div className="flex-1 flex justify-end items-center pr-4">
+              <div className="flex-1 flex justify-end items-center">
                 <span
-                  className="text-[5.5rem] font-black leading-none text-black 
-                  tracking-tighter"
+                  className="text-[4.5rem] font-black leading-none 
+                  text-black tracking-tighter"
                 >
                   {seqId}
                 </span>
