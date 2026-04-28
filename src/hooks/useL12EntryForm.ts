@@ -105,33 +105,22 @@ export const useL12EntryForm = () => {
 
     if (validDetails.length === 0) return;
 
-    const groupedByShopOrder = validDetails.reduce(
-      (acc, current) => {
-        if (!acc[current.shopOrder]) {
-          acc[current.shopOrder] = [];
-        }
-        acc[current.shopOrder].push({
-          partNumber: current.partNumber,
-          client: current.client || "",
-          quantity: current.quantity,
-          boxesQuantity: current.boxesQuantity || 0,
-        });
-        return acc;
-      },
-      {} as Record<string, EntryDetail[]>,
-    );
-
     const globalLoadingToast = toast.loading("Registrando entradas...");
     let allSuccess = true;
     const currentTransactionFolios: string[] = [];
 
-    for (const [currentShopOrder, groupDetails] of Object.entries(
-      groupedByShopOrder,
-    )) {
+    for (const detail of validDetails) {
       const payload: EntryHeader = {
         lineId: L12_LINE_ID,
-        shopOrder: currentShopOrder,
-        details: groupDetails,
+        shopOrder: detail.shopOrder,
+        details: [
+          {
+            partNumber: detail.partNumber,
+            client: detail.client || "",
+            quantity: detail.quantity,
+            boxesQuantity: detail.boxesQuantity || 0,
+          },
+        ],
       };
 
       const returnedFolio = await submitEntry(payload, false);
