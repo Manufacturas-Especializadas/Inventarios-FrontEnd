@@ -28,8 +28,7 @@ export const L12EntryForm = () => {
             Registro de Entrada - Línea 12
           </h2>
           <p className="text-sm text-gray-500">
-            DAIKIN bloqueado a 8 cajas (excepto No. Parte 0227A00293). Todo se
-            convierte a mayúsculas automáticamente.
+            DAIKIN bloqueado a 8 cajas (excepto No. Parte 0227A00293)
           </p>
 
           <div className="flex justify-end gap-3 mt-4">
