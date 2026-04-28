@@ -225,18 +225,39 @@ export const DatabaseView12 = () => {
         className="hidden print:flex print:flex-col print:items-center print:gap-10 
         print:absolute print:inset-0 print:bg-white print:z-9999 print:py-8"
       >
-        {foliosToPrint.map((folio, index) => {
-          const folioText = String(folio).split("-").pop();
+        {foliosToPrint.map((item: any, index) => {
+          let rawFolio: any = item.folio || item;
+
+          if (typeof rawFolio === "string" && rawFolio.startsWith("{")) {
+            try {
+              rawFolio = JSON.parse(rawFolio);
+            } catch (e) {}
+          }
+
+          const folioString =
+            typeof rawFolio === "object" && rawFolio !== null
+              ? rawFolio.id || rawFolio.folio
+              : rawFolio;
+
+          const shopOrder = item.shopOrder || "";
+          const folioText = String(folioString).split("-").pop();
 
           return (
             <div
               key={index}
-              className="w-[120mm] h-[65mm] flex items-center justify-between p-8 
+              className="relative w-[120mm] h-[65mm] flex items-center justify-between p-8 pt-10 
               bg-white text-black border-2 border-dashed border-gray-400 rounded-xl"
             >
+              <div
+                className="absolute top-4 left-8 text-sm font-bold text-slate-500 
+                uppercase tracking-widest"
+              >
+                <span className="text-black text-lg">{shopOrder}</span>
+              </div>
+
               <div className="flex flex-col items-center justify-center h-full gap-3">
                 <Barcode
-                  value={String(folio)}
+                  value={String(folioString)}
                   width={2.2}
                   height={50}
                   fontSize={16}
