@@ -4,6 +4,7 @@ import { useExportExcel } from "./useExportExcel";
 import { useEntryHistory } from "./useEntryHistory";
 import { useExitHistory } from "./useExitHistory";
 import { useEntryMutations } from "./useEntryMutations";
+import toast from "react-hot-toast";
 
 const ITEMS_PER_PAGE = 10;
 export type TabType = "balance" | "entries" | "exits";
@@ -11,6 +12,8 @@ export type TabType = "balance" | "entries" | "exits";
 export const useL12Database = (lineId: number) => {
   const [activeTab, setActiveTab] = useState<TabType>("balance");
   const [editingRecord, setEditingRecord] = useState<any | null>(null);
+
+  const [foliosToPrint, setFoliosToPrint] = useState<string[]>([]);
 
   const {
     balances,
@@ -61,6 +64,25 @@ export const useL12Database = (lineId: number) => {
       refetchEntries();
       refetchBalance();
     }
+  };
+
+  const handleReprint = (folio: string) => {
+    if (!folio) {
+      toast.error("Este registro no tiene un folio asignado");
+
+      return;
+    }
+
+    toast.dismiss();
+    setFoliosToPrint([folio]);
+
+    setTimeout(() => {
+      window.print();
+
+      setTimeout(() => {
+        setFoliosToPrint([]);
+      }, 3000);
+    }, 2000);
   };
 
   const filteredData = useMemo(() => {
@@ -119,5 +141,7 @@ export const useL12Database = (lineId: number) => {
     totalPages,
     paginatedData,
     filteredEntryHistory,
+    foliosToPrint,
+    handleReprint,
   };
 };
