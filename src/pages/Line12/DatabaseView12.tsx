@@ -44,6 +44,10 @@ export const DatabaseView12 = () => {
     filteredEntryHistory,
     handleReprint,
     foliosToPrint,
+    selectedEntries,
+    handleToggleSelect,
+    handleToggleSelectAll,
+    handleBulkReprint,
   } = useL12Database(LINE_ID);
 
   return (
@@ -206,6 +210,11 @@ export const DatabaseView12 = () => {
               onDelete={handleDeleteEntry}
               isDeleting={isDeletingEntry}
               onReprint={handleReprint}
+              showCheckboxes={true}
+              selectedEntries={selectedEntries}
+              onToggleSelect={handleToggleSelect}
+              onToggleSelectAll={handleToggleSelectAll}
+              onBulkPrint={handleBulkReprint}
             />
           )}
         </div>
