@@ -88,7 +88,6 @@ export const EntryHistoryTable = ({
           </thead>
           <tbody className="divide-y divide-slate-100">
             {isLoading ? (
-              // ... (tu código de loading y empty state igual) ...
               <tr>
                 <td
                   colSpan={showCheckboxes ? 5 : 4}
