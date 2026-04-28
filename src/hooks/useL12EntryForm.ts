@@ -85,11 +85,15 @@ export const useL12EntryForm = () => {
   const handlePrintFolios = () => {
     if (generatedFolios.length === 0) return;
 
-    window.print();
+    toast.dismiss();
 
     setTimeout(() => {
-      setGeneratedFolios([]);
-    }, 3000);
+      window.print();
+
+      setTimeout(() => {
+        setGeneratedFolios([]);
+      }, 3000);
+    }, 200);
   };
 
   const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
