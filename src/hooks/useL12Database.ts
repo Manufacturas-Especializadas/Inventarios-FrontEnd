@@ -14,6 +14,9 @@ export const useL12Database = (lineId: number) => {
   const [editingRecord, setEditingRecord] = useState<any | null>(null);
 
   const [foliosToPrint, setFoliosToPrint] = useState<any[]>([]);
+  const [selectedEntries, setSelectedEntries] = useState<
+    { folio: string; shopOrder: string }[]
+  >([]);
 
   const {
     balances,
@@ -84,6 +87,45 @@ export const useL12Database = (lineId: number) => {
     }, 200);
   };
 
+  const handleToggleSelect = (folio: string, shopOrder: string) => {
+    setSelectedEntries((prev) => {
+      const exists = prev.find((e) => e.folio === folio);
+
+      if (exists) {
+        return prev.filter((e) => e.folio !== folio);
+      }
+
+      return [...prev, { folio, shopOrder }];
+    });
+  };
+
+  const handleToggleSelectAll = (entries: any[], isSelected: boolean) => {
+    if (isSelected) {
+      const allSelected = entries
+        .filter((e) => e.folio)
+        .map((e) => ({ folio: e.folio, shopOrder: e.shopOrder || "N/A" }));
+      setSelectedEntries(allSelected);
+    } else {
+      setSelectedEntries([]);
+    }
+  };
+
+  const handleBulkReprint = () => {
+    if (selectedEntries.length === 0) return;
+
+    toast.dismiss();
+
+    setFoliosToPrint(selectedEntries);
+
+    setTimeout(() => {
+      window.print();
+      setTimeout(() => {
+        setFoliosToPrint([]);
+        setSelectedEntries([]);
+      }, 3000);
+    }, 2000);
+  };
+
   const filteredData = useMemo(() => {
     return balances.filter((item) => {
       return (
@@ -137,6 +179,10 @@ export const useL12Database = (lineId: number) => {
     isDeletingEntry,
     handleGlobalRefetch,
     handleDeleteEntry,
+    handleBulkReprint,
+    handleToggleSelect,
+    handleToggleSelectAll,
+    selectedEntries,
     totalPages,
     paginatedData,
     filteredEntryHistory,
