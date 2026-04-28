@@ -231,32 +231,29 @@ export const DatabaseView12 = () => {
       </div>
 
       <div
-        className="hidden print:flex print:flex-col print:items-center print:gap-10 
-        print:absolute print:top-0 print:left-0 print:w-full print:bg-white 
-        print:z-9999 print:py-8"
+        className="hidden print:block print:absolute print:top-0 print:left-0 
+        print:w-full print:bg-white print:z-9999 print:py-8"
       >
         {foliosToPrint.map((item: any, index) => {
           let rawFolio: any = item.folio || item;
-
           if (typeof rawFolio === "string" && rawFolio.startsWith("{")) {
             try {
               rawFolio = JSON.parse(rawFolio);
             } catch (e) {}
           }
-
           const folioString =
             typeof rawFolio === "object" && rawFolio !== null
               ? rawFolio.id || rawFolio.folio
               : rawFolio;
-
           const shopOrder = item.shopOrder || "";
           const folioText = String(folioString).split("-").pop();
 
           return (
             <div
               key={index}
-              className="relative w-[120mm] h-[65mm] flex items-center justify-between p-8 pt-10 
-              bg-white text-black border-2 border-dashed border-gray-400 rounded-xl"
+              className="relative w-[120mm] h-[65mm] mx-auto mb-12 flex items-center justify-between 
+              p-8 pt-10 bg-white text-black border-2 border-dashed border-gray-400 rounded-xl 
+              print:break-inside-avoid"
             >
               <div
                 className="absolute top-4 left-8 text-sm font-bold text-slate-500 
