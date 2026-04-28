@@ -6,31 +6,40 @@ import { lService } from "../api/services/LService";
 export const useInventoryEntry = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submitEntry = async (data: EntryHeader, showToast: boolean = true) => {
+  const submitEntry = async (
+    data: EntryHeader,
+    showToast: boolean = true,
+  ): Promise<string | false> => {
     if (data.details.length === 0) {
-      return toast.error("Debe agregar al menos un número de parte");
+      toast.error("Debe agregar al menos un número de parte");
+      return false;
     }
 
     setIsSubmitting(true);
     let loadingToast: string | undefined;
+
     if (showToast) {
       loadingToast = toast.loading("Registrando entrada");
     }
 
     try {
-      await lService.create(data);
+      const response = await lService.create(data);
 
-      toast.success("Entrada registrada correctamente", { id: loadingToast });
-
-      return true;
+      if (showToast) {
+        toast.success("Entrada registrada correctamente", { id: loadingToast });
+      }
+      return response;
     } catch (error: any) {
       console.error("Error en registro: ", error);
-      toast.error(
-        error.response?.data.message || "Error al conectar con el servidor",
-        {
-          id: loadingToast,
-        },
-      );
+
+      if (showToast) {
+        toast.error(
+          error.response?.data?.message || "Error al conectar con el servidor",
+          {
+            id: loadingToast,
+          },
+        );
+      }
 
       return false;
     } finally {

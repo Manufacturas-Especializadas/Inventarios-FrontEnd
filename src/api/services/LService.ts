@@ -72,8 +72,8 @@ class LService {
     return apiClient.get<Stock>(`${this.stockEndpoint}${lineId}/${partNumber}`);
   }
 
-  async create(data: EntryHeader): Promise<void> {
-    return apiClient.post(this.createEndpoint, data);
+  async create(data: EntryHeader) {
+    return apiClient.post<string>(this.createEndpoint, data);
   }
 
   async updateEntries(data: EntryUpdate, id: number): Promise<void> {

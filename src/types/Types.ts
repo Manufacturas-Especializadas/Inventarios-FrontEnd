@@ -34,6 +34,7 @@ export interface HistoryEntry {
   lineId: number;
   createdAt: string;
   shopOrder: string;
+  folio: string;
   details: HistoryDetailsEntry[];
 }
 

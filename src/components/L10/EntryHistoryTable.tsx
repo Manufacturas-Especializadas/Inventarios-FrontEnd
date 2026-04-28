@@ -1,4 +1,4 @@
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Printer, Trash2 } from "lucide-react";
 import type { HistoryEntry } from "../../types/Types";
 import { formatDate } from "../../utils/formatDate";
 
@@ -8,6 +8,7 @@ interface Props {
   onEdit: (entry: HistoryEntry) => void;
   onDelete: (id: number) => void;
   isDeleting: boolean;
+  onReprint?: (folio: string) => void;
 }
 
 export const EntryHistoryTable = ({
@@ -16,6 +17,7 @@ export const EntryHistoryTable = ({
   onEdit,
   onDelete,
   isDeleting,
+  onReprint,
 }: Props) => {
   return (
     <div className="overflow-x-auto">
@@ -99,6 +101,16 @@ export const EntryHistoryTable = ({
                   >
                     <Trash2 size={16} />
                   </button>
+                  {onReprint && (
+                    <button
+                      onClick={() => onReprint(entry.folio)}
+                      className="p-2 text-emerald-600 bg-emerald-50 rounded-lg hover:bg-emerald-100 
+                      transition-colors"
+                      title="Reimprimir Etiqueta"
+                    >
+                      <Printer size={16} />
+                    </button>
+                  )}
                 </td>
               </tr>
             ))
