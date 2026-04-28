@@ -44,11 +44,15 @@ export const DatabaseView12 = () => {
     filteredEntryHistory,
     handleReprint,
     foliosToPrint,
+    selectedEntries,
+    handleToggleSelect,
+    handleToggleSelectAll,
+    handleBulkReprint,
   } = useL12Database(LINE_ID);
 
   return (
     <>
-      <div className="max-w-7xl mx-auto space-y-6 pb-20">
+      <div className="max-w-7xl mx-auto space-y-6 pb-20 print:hidden">
         <div className="flex justify-end gap-3 pb-2 border-b border-slate-200">
           <button
             onClick={() => navigate("/entradas-linea-12")}
@@ -206,6 +210,12 @@ export const DatabaseView12 = () => {
               onDelete={handleDeleteEntry}
               isDeleting={isDeletingEntry}
               onReprint={handleReprint}
+              showCheckboxes={true}
+              selectedEntries={selectedEntries}
+              onToggleSelect={handleToggleSelect}
+              onToggleSelectAll={handleToggleSelectAll}
+              onBulkPrint={handleBulkReprint}
+              showShopOrder={true}
             />
           )}
         </div>
@@ -222,35 +232,65 @@ export const DatabaseView12 = () => {
       </div>
 
       <div
-        className="hidden print:flex print:flex-col print:items-center 
-        print:gap-10 print:absolute print:inset-0 print:bg-white print:z-9999
-        print:py-8"
+        className="hidden print:block print:absolute print:top-0 print:left-0 
+        print:w-full print:bg-white print:z-9999 print:py-8"
       >
-        {foliosToPrint.map((folio, index) => (
-          <div
-            key={index}
-            className="w-[120mm] h-[65mm] flex items-center justify-between p-8 
-            bg-white text-black border-2 border-dashed border-gray-400 rounded-xl"
-          >
-            <div className="flex flex-col items-center justify-center h-full gap-3">
-              <Barcode
-                value={folio}
-                width={2.2}
-                height={50}
-                fontSize={16}
-                font="monospace"
-                textMargin={6}
-                margin={0}
-                displayValue={true}
-              />
-              <img
-                src={Logo}
-                alt="Logo MESA"
-                className="h-8 object-contain mt-1 grayscale"
-              />
+        {foliosToPrint.map((item: any, index) => {
+          let rawFolio: any = item.folio || item;
+          if (typeof rawFolio === "string" && rawFolio.startsWith("{")) {
+            try {
+              rawFolio = JSON.parse(rawFolio);
+            } catch (e) {}
+          }
+          const folioString =
+            typeof rawFolio === "object" && rawFolio !== null
+              ? rawFolio.id || rawFolio.folio
+              : rawFolio;
+          const shopOrder = item.shopOrder || "";
+          const folioText = String(folioString).split("-").pop();
+
+          return (
+            <div
+              key={index}
+              className="relative w-[120mm] h-[65mm] mx-auto mb-12 flex items-center justify-between 
+              p-8 pt-10 bg-white text-black border-2 border-dashed border-gray-400 rounded-xl 
+              print:break-inside-avoid"
+            >
+              <div
+                className="absolute top-4 left-8 text-sm font-bold text-slate-500 
+                uppercase tracking-widest"
+              >
+                <span className="text-black text-lg">{shopOrder}</span>
+              </div>
+
+              <div className="flex flex-col items-center justify-center h-full gap-3">
+                <Barcode
+                  value={String(folioString)}
+                  width={2.2}
+                  height={50}
+                  fontSize={16}
+                  font="monospace"
+                  textMargin={6}
+                  margin={0}
+                  displayValue={true}
+                />
+                <img
+                  src={Logo}
+                  alt="Logo MESA"
+                  className="h-8 object-contain mt-1 grayscale"
+                />
+              </div>
+              <div className="flex-1 flex justify-end items-center pr-2">
+                <span
+                  className="text-[4.5rem] font-black leading-none text-black 
+                  tracking-tighter"
+                >
+                  {folioText}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </>
   );

@@ -262,29 +262,43 @@ export const L12EntryForm = () => {
       </div>
 
       <div
-        className="hidden print:flex print:flex-col print:items-center 
-        print:gap-10 print:absolute print:inset-0 print:bg-white print:z-9999 
-        print:py-8"
+        className="hidden print:flex print:flex-col print:items-center print:gap-10 
+        print:absolute print:inset-0 print:bg-white print:z-9999 print:py-8"
       >
-        {generatedFolios.map((item: any, index: number) => {
-          let data = item;
-          if (typeof item === "string" && item.startsWith("{")) {
+        {generatedFolios.map((item, index) => {
+          let rawFolio: any = item.folio;
+
+          if (typeof rawFolio === "string" && rawFolio.startsWith("{")) {
             try {
-              data = JSON.parse(item);
+              rawFolio = JSON.parse(rawFolio);
             } catch (e) {}
           }
-          const seqId = typeof data === "object" ? data.id || data.folio : data;
+
+          const folioString =
+            typeof rawFolio === "object" && rawFolio !== null
+              ? rawFolio.id || rawFolio.folio
+              : rawFolio;
+
+          const shopOrder = item.shopOrder || "";
+          const folioText = String(folioString).split("-").pop();
 
           return (
             <div
               key={index}
-              className="w-[120mm] h-[65mm] flex items-center justify-between 
-              p-8 bg-white text-black border-2 border-dashed border-gray-400 
+              className="relative w-[120mm] h-[65mm] flex items-center justify-between 
+              p-8 pt-10 bg-white text-black border-2 border-dashed border-gray-400 
               rounded-xl"
             >
+              <div
+                className="absolute top-4 left-8 text-sm font-bold text-slate-500 
+                uppercase tracking-widest"
+              >
+                <span className="text-black text-lg">{shopOrder}</span>
+              </div>
+
               <div className="flex flex-col items-center justify-center h-full gap-3">
                 <Barcode
-                  value={String(seqId)}
+                  value={String(folioString)}
                   width={2.2}
                   height={50}
                   fontSize={16}
@@ -293,20 +307,18 @@ export const L12EntryForm = () => {
                   margin={0}
                   displayValue={true}
                 />
-
                 <img
                   src={Logo}
                   alt="Logo MESA"
                   className="h-8 object-contain mt-1 grayscale"
                 />
               </div>
-
-              <div className="flex-1 flex justify-end items-center">
+              <div className="flex-1 flex justify-end items-center pr-2">
                 <span
-                  className="text-[4.5rem] font-black leading-none 
-                  text-black tracking-tighter"
+                  className="text-[4.5rem] font-black leading-none text-black 
+                  tracking-tighter"
                 >
-                  {seqId}
+                  {folioText}
                 </span>
               </div>
             </div>
