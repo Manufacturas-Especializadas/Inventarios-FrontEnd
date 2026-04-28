@@ -14,6 +14,7 @@ interface Props {
   onToggleSelect?: (folio: string, shopOrder: string) => void;
   onToggleSelectAll?: (entries: HistoryEntry[], isSelected: boolean) => void;
   onBulkPrint?: () => void;
+  showShopOrder?: boolean;
 }
 
 export const EntryHistoryTable = ({
@@ -28,6 +29,7 @@ export const EntryHistoryTable = ({
   onToggleSelectAll,
   onToggleSelect,
   onBulkPrint,
+  showShopOrder = false,
 }: Props) => {
   const isAllSelected =
     data.length > 0 &&
@@ -78,9 +80,11 @@ export const EntryHistoryTable = ({
               <th className="px-4 py-4 text-xs font-bold text-emerald-700 uppercase w-40">
                 Fecha y Hora
               </th>
-              <th className="px-4 py-4 text-xs font-bold text-emerald-700 uppercase w-40">
-                ShopOrder
-              </th>
+              {showShopOrder && (
+                <th className="px-4 py-4 text-xs font-bold text-emerald-700 uppercase w-40">
+                  ShopOrder
+                </th>
+              )}
               <th className="px-4 py-4 text-xs font-bold text-emerald-700 uppercase">
                 Detalle de Piezas Ingresadas
               </th>
@@ -144,9 +148,11 @@ export const EntryHistoryTable = ({
                     <td className="px-4 py-4 text-sm font-medium text-slate-500">
                       {formatDate(entry.createdAt)}
                     </td>
-                    <td className="px-4 py-4 text-sm font-medium text-slate-500">
-                      {entry.shopOrder}
-                    </td>
+                    {showShopOrder && (
+                      <td className="px-4 py-4 text-sm font-medium text-slate-500">
+                        {entry.shopOrder || "N/A"}
+                      </td>
+                    )}
                     <td className="px-4 py-4">
                       <div className="flex flex-wrap gap-2">
                         {entry.details.map((d, idx) => (

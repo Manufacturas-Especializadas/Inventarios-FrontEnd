@@ -215,6 +215,7 @@ export const DatabaseView12 = () => {
               onToggleSelect={handleToggleSelect}
               onToggleSelectAll={handleToggleSelectAll}
               onBulkPrint={handleBulkReprint}
+              showShopOrder={true}
             />
           )}
         </div>
