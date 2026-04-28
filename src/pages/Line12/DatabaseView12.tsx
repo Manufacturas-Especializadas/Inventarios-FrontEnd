@@ -222,35 +222,46 @@ export const DatabaseView12 = () => {
       </div>
 
       <div
-        className="hidden print:flex print:flex-col print:items-center 
-        print:gap-10 print:absolute print:inset-0 print:bg-white print:z-9999
-        print:py-8"
+        className="hidden print:flex print:flex-col print:items-center print:gap-10 
+        print:absolute print:inset-0 print:bg-white print:z-9999 print:py-8"
       >
-        {foliosToPrint.map((folio, index) => (
-          <div
-            key={index}
-            className="w-[120mm] h-[65mm] flex items-center justify-between p-8 
-            bg-white text-black border-2 border-dashed border-gray-400 rounded-xl"
-          >
-            <div className="flex flex-col items-center justify-center h-full gap-3">
-              <Barcode
-                value={folio}
-                width={2.2}
-                height={50}
-                fontSize={16}
-                font="monospace"
-                textMargin={6}
-                margin={0}
-                displayValue={true}
-              />
-              <img
-                src={Logo}
-                alt="Logo MESA"
-                className="h-8 object-contain mt-1 grayscale"
-              />
+        {foliosToPrint.map((folio, index) => {
+          const folioText = String(folio).split("-").pop();
+
+          return (
+            <div
+              key={index}
+              className="w-[120mm] h-[65mm] flex items-center justify-between p-8 
+              bg-white text-black border-2 border-dashed border-gray-400 rounded-xl"
+            >
+              <div className="flex flex-col items-center justify-center h-full gap-3">
+                <Barcode
+                  value={String(folio)}
+                  width={2.2}
+                  height={50}
+                  fontSize={16}
+                  font="monospace"
+                  textMargin={6}
+                  margin={0}
+                  displayValue={true}
+                />
+                <img
+                  src={Logo}
+                  alt="Logo MESA"
+                  className="h-8 object-contain mt-1 grayscale"
+                />
+              </div>
+              <div className="flex-1 flex justify-end items-center pr-2">
+                <span
+                  className="text-[4.5rem] font-black leading-none text-black 
+                  tracking-tighter"
+                >
+                  {folioText}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </>
   );
