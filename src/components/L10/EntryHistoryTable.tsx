@@ -8,7 +8,7 @@ interface Props {
   onEdit: (entry: HistoryEntry) => void;
   onDelete: (id: number) => void;
   isDeleting: boolean;
-  onReprint?: (folio: string) => void;
+  onReprint?: (folio: string, shopOrder: string) => void;
 }
 
 export const EntryHistoryTable = ({
@@ -103,7 +103,7 @@ export const EntryHistoryTable = ({
                   </button>
                   {onReprint && (
                     <button
-                      onClick={() => onReprint(entry.folio)}
+                      onClick={() => onReprint(entry.folio, entry.shopOrder)}
                       className="p-2 text-emerald-600 bg-emerald-50 rounded-lg hover:bg-emerald-100 
                       transition-colors"
                       title="Reimprimir Etiqueta"
