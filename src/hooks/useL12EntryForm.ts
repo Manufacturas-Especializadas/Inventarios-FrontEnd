@@ -25,7 +25,9 @@ const emptyRow: UIEntryRow = {
 export const useL12EntryForm = () => {
   const { submitEntry, isSubmitting } = useInventoryEntry();
 
-  const [generatedFolios, setGeneratedFolios] = useState<string[]>([]);
+  const [generatedFolios, setGeneratedFolios] = useState<
+    { folio: string; shopOrder: string }[]
+  >([]);
   const [details, setDetails] = useState<UIEntryRow[]>(
     Array.from({ length: 10 }, () => ({ ...emptyRow })),
   );
@@ -107,7 +109,7 @@ export const useL12EntryForm = () => {
 
     const globalLoadingToast = toast.loading("Registrando entradas...");
     let allSuccess = true;
-    const currentTransactionFolios: string[] = [];
+    const currentTransactionFolios: { folio: string; shopOrder: string }[] = [];
 
     for (const detail of validDetails) {
       const payload: EntryHeader = {
@@ -129,7 +131,10 @@ export const useL12EntryForm = () => {
         allSuccess = false;
         break;
       }
-      currentTransactionFolios.push(returnedFolio);
+      currentTransactionFolios.push({
+        folio: returnedFolio,
+        shopOrder: detail.shopOrder,
+      });
     }
 
     if (allSuccess) {
