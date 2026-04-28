@@ -13,7 +13,7 @@ export const useL12Database = (lineId: number) => {
   const [activeTab, setActiveTab] = useState<TabType>("balance");
   const [editingRecord, setEditingRecord] = useState<any | null>(null);
 
-  const [foliosToPrint, setFoliosToPrint] = useState<string[]>([]);
+  const [foliosToPrint, setFoliosToPrint] = useState<any[]>([]);
 
   const {
     balances,
@@ -66,23 +66,22 @@ export const useL12Database = (lineId: number) => {
     }
   };
 
-  const handleReprint = (folio: string) => {
+  const handleReprint = (folio: string, shopOrder: string) => {
     if (!folio) {
-      toast.error("Este registro no tiene un folio asignado");
-
+      toast.error("Este registro no tiene un folio asignado.");
       return;
     }
 
     toast.dismiss();
-    setFoliosToPrint([folio]);
+
+    setFoliosToPrint([{ folio: folio, shopOrder: shopOrder }]);
 
     setTimeout(() => {
       window.print();
-
       setTimeout(() => {
         setFoliosToPrint([]);
       }, 3000);
-    }, 2000);
+    }, 200);
   };
 
   const filteredData = useMemo(() => {
