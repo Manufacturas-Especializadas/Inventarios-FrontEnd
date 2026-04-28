@@ -4,6 +4,7 @@ import type { EntryDetail, EntryHeader } from "../../types/Types";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { DatabaseIcon, LogIn } from "lucide-react";
+import * as XLSX from "xlsx";
 
 const L12_LINE_ID = 11;
 
@@ -25,6 +26,7 @@ export const L12EntryForm = () => {
   const { submitEntry, isSubmitting } = useInventoryEntry();
   const navigate = useNavigate();
 
+  const [generatedFolios, setGeneratedFolios] = useState<string[]>([]);
   const [details, setDetails] = useState<UIEntryRow[]>(
     Array.from({ length: 10 }, () => ({ ...emptyRow })),
   );
@@ -82,6 +84,40 @@ export const L12EntryForm = () => {
     setDetails(newDetails);
   };
 
+  const handleDownloadFolios = () => {
+    if (generatedFolios.length === 0) return;
+
+    const excelData = generatedFolios.map((item: any) => {
+      let data = item;
+
+      if (typeof item === "string" && item.startsWith("{")) {
+        try {
+          data = JSON.parse(item);
+        } catch (e) {}
+      }
+
+      const valorSecuencia =
+        typeof data === "object" ? data.id || data.folio : data;
+
+      const folioCompleto = `${valorSecuencia}`;
+
+      return { "Folio Generado (Línea 12)": folioCompleto };
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+
+    worksheet["!cols"] = [{ wch: 30 }];
+
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Folios L12");
+
+    const dateStr = new Date().toISOString().slice(2, 10).replace(/-/g, "");
+    XLSX.writeFile(workbook, `Folios_12_${dateStr}.xlsx`);
+
+    setGeneratedFolios([]);
+  };
+
   const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -112,6 +148,8 @@ export const L12EntryForm = () => {
     const globalLoadingToast = toast.loading("Registrando entradas...");
     let allSuccess = true;
 
+    const currentTransactionFolios: string[] = [];
+
     for (const [currentShopOrder, groupDetails] of Object.entries(
       groupedByShopOrder,
     )) {
@@ -121,18 +159,23 @@ export const L12EntryForm = () => {
         details: groupDetails,
       };
 
-      const success = await submitEntry(payload, false);
+      const returnedFolio = await submitEntry(payload, false);
 
-      if (!success) {
+      if (!returnedFolio) {
         allSuccess = false;
         break;
       }
+
+      currentTransactionFolios.push(returnedFolio);
     }
 
     if (allSuccess) {
       toast.success("Entradas registradas correctamente", {
         id: globalLoadingToast,
       });
+
+      setGeneratedFolios(currentTransactionFolios);
+
       setDetails(Array.from({ length: 10 }, () => ({ ...emptyRow })));
     } else {
       toast.error("Ocurrió un error al registrar algunas entradas", {
@@ -156,6 +199,32 @@ export const L12EntryForm = () => {
         </p>
 
         <div className="flex justify-end gap-3 mt-4">
+          <div className="flex justify-start">
+            {generatedFolios.length > 0 && (
+              <button
+                type="button"
+                onClick={handleDownloadFolios}
+                className="px-6 py-2 rounded-lg bg-emerald-100 text-emerald-800 border 
+              border-emerald-300 font-bold transition-colors hover:bg-emerald-200
+              hover:cursor-pointer flex items-center gap-2 animate-pulse"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+                Descargar {generatedFolios.length} Folio(s)
+              </button>
+            )}
+          </div>
           <button
             type="button"
             className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600
