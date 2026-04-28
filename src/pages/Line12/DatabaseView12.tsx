@@ -48,7 +48,7 @@ export const DatabaseView12 = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto space-y-6 pb-20">
+      <div className="max-w-7xl mx-auto space-y-6 pb-20 print:hidden">
         <div className="flex justify-end gap-3 pb-2 border-b border-slate-200">
           <button
             onClick={() => navigate("/entradas-linea-12")}
@@ -223,7 +223,8 @@ export const DatabaseView12 = () => {
 
       <div
         className="hidden print:flex print:flex-col print:items-center print:gap-10 
-        print:absolute print:inset-0 print:bg-white print:z-9999 print:py-8"
+        print:absolute print:top-0 print:left-0 print:w-full print:bg-white 
+        print:z-9999 print:py-8"
       >
         {foliosToPrint.map((item: any, index) => {
           let rawFolio: any = item.folio || item;
