@@ -78,6 +78,9 @@ export const EntryHistoryTable = ({
               <th className="px-4 py-4 text-xs font-bold text-emerald-700 uppercase w-40">
                 Fecha y Hora
               </th>
+              <th className="px-4 py-4 text-xs font-bold text-emerald-700 uppercase w-40">
+                ShopOrder
+              </th>
               <th className="px-4 py-4 text-xs font-bold text-emerald-700 uppercase">
                 Detalle de Piezas Ingresadas
               </th>
@@ -140,6 +143,9 @@ export const EntryHistoryTable = ({
                     </td>
                     <td className="px-4 py-4 text-sm font-medium text-slate-500">
                       {formatDate(entry.createdAt)}
+                    </td>
+                    <td className="px-4 py-4 text-sm font-medium text-slate-500">
+                      {entry.shopOrder}
                     </td>
                     <td className="px-4 py-4">
                       <div className="flex flex-wrap gap-2">
