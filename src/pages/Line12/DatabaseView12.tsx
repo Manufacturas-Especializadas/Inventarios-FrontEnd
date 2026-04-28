@@ -13,6 +13,8 @@ import { BalanceTable } from "../../components/L10/BalanceTable";
 import { EntryHistoryTable } from "../../components/L10/EntryHistoryTable";
 import { EditTransactionModal } from "../../components/Modals/EditTransactionModal";
 import { useL12Database } from "../../hooks/useL12Database";
+import Barcode from "react-barcode";
+import Logo from "../../assets/logomesa.png";
 
 const LINE_ID = 11;
 
@@ -217,6 +219,38 @@ export const DatabaseView12 = () => {
             setEditingRecord(null);
           }}
         />
+      </div>
+
+      <div
+        className="hidden print:flex print:flex-col print:items-center 
+        print:gap-10 print:absolute print:inset-0 print:bg-white print:z-9999
+        print:py-8"
+      >
+        {foliosToPrint.map((folio, index) => (
+          <div
+            key={index}
+            className="w-[120mm] h-[65mm] flex items-center justify-between p-8 
+            bg-white text-black border-2 border-dashed border-gray-400 rounded-xl"
+          >
+            <div className="flex flex-col items-center justify-center h-full gap-3">
+              <Barcode
+                value={folio}
+                width={2.2}
+                height={50}
+                fontSize={16}
+                font="monospace"
+                textMargin={6}
+                margin={0}
+                displayValue={true}
+              />
+              <img
+                src={Logo}
+                alt="Logo MESA"
+                className="h-8 object-contain mt-1 grayscale"
+              />
+            </div>
+          </div>
+        ))}
       </div>
     </>
   );
