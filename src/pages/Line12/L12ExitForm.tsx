@@ -40,14 +40,16 @@ export const L12ExitForm = () => {
         <button
           onClick={() => navigate("/entradas-linea-12")}
           className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg 
-          font-semibold hover:bg-blue-100 transition-colors shadow-sm"
+          font-semibold hover:bg-blue-100 transition-colors shadow-sm
+          hover:cursor-pointer"
         >
           <LogIn size={18} /> Ir a Entradas
         </button>
         <button
           onClick={() => navigate("/base-de-datos-l12")}
           className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg 
-          font-semibold hover:bg-slate-900 transition-colors shadow-sm"
+          font-semibold hover:bg-slate-900 transition-colors shadow-sm
+          hover:cursor-pointer"
         >
           <DatabaseIcon size={18} /> Base de Datos
         </button>
