@@ -6,6 +6,7 @@ const L12_LINE_ID = 11;
 
 export const useL12ExitForm = () => {
   const [folios, setFolios] = useState<string[]>(Array(8).fill(""));
+  const [folioDetails, setFolioDetails] = useState<Record<number, any>>({});
   const [isProcessing, setIsProcessing] = useState(false);
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -14,21 +15,49 @@ export const useL12ExitForm = () => {
     const newFolios = [...folios];
     newFolios[index] = value.toUpperCase();
     setFolios(newFolios);
+
+    if (value === "") {
+      const newDetails = { ...folioDetails };
+      delete newDetails[index];
+      setFolioDetails(newDetails);
+    }
   };
 
-  const handleKeyDown = (
+  const handleKeyDown = async (
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (e.key === "Enter") {
       e.preventDefault();
 
-      if (folios[index].trim() !== "") {
-        if (index === folios.length - 1) {
-          setFolios([...folios, ""]);
-          setTimeout(() => inputRefs.current[index + 1]?.focus(), 50);
-        } else {
-          inputRefs.current[index + 1]?.focus();
+      const currentFolio = folios[index].trim();
+      if (currentFolio !== "") {
+        try {
+          const toastId = toast.loading("Buscando folio...");
+          const preview = await lService.getFolioPreview(
+            L12_LINE_ID,
+            currentFolio,
+          );
+          toast.dismiss(toastId);
+
+          setFolioDetails((prev) => ({ ...prev, [index]: preview }));
+
+          if (index === folios.length - 1) {
+            setFolios([...folios, ""]);
+            setTimeout(() => inputRefs.current[index + 1]?.focus(), 50);
+          } else {
+            inputRefs.current[index + 1]?.focus();
+          }
+        } catch (error: any) {
+          toast.dismiss();
+          const msg = error.response?.data?.Message || "Folio no encontrado";
+          toast.error(msg);
+
+          const newDetails = { ...folioDetails };
+          delete newDetails[index];
+          setFolioDetails(newDetails);
+
+          inputRefs.current[index]?.select();
         }
       }
     }
@@ -42,38 +71,50 @@ export const useL12ExitForm = () => {
   const handleRemoveRow = (index: number) => {
     if (folios.length === 1) {
       setFolios([""]);
+      setFolioDetails({});
       return;
     }
     const newFolios = folios.filter((_, i) => i !== index);
     setFolios(newFolios);
+
+    const newDetails: Record<number, any> = {};
+    newFolios.forEach((f, i) => {
+      const oldIndex = folios.indexOf(f);
+      if (oldIndex !== -1 && folioDetails[oldIndex]) {
+        newDetails[i] = folioDetails[oldIndex];
+      }
+    });
+    setFolioDetails(newDetails);
   };
 
   const handleSubmit = async () => {
-    const validFolios = folios.map((f) => f.trim()).filter((f) => f !== "");
+    const validIndexes = folios
+      .map((f, i) => (f.trim() !== "" && folioDetails[i] ? i : -1))
+      .filter((i) => i !== -1);
 
-    if (validFolios.length === 0) {
-      toast.error("Agrega al menos un folio para procesar.");
+    if (validIndexes.length === 0) {
+      toast.error("Por favor escanea y valida al menos un folio.");
       return;
     }
 
     setIsProcessing(true);
     const toastId = toast.loading(
-      `Procesando ${validFolios.length} salida(s)...`,
+      `Procesando ${validIndexes.length} salida(s)...`,
     );
 
     let successCount = 0;
     let errors: string[] = [];
 
-    for (const folio of validFolios) {
+    for (const index of validIndexes) {
       try {
         await lService.createExitByFolio({
           lineId: L12_LINE_ID,
-          folio: folio,
+          folio: folios[index].trim(),
         });
         successCount++;
       } catch (error: any) {
-        const msg = error.response?.data?.Message || "Error desconocido";
-        errors.push(`Folio ${folio}: ${msg}`);
+        const msg = error.response?.data?.message || "Error desconocido";
+        errors.push(`Folio ${folios[index]}: ${msg}`);
       }
     }
 
@@ -83,21 +124,14 @@ export const useL12ExitForm = () => {
       toast.success(`¡Se procesaron ${successCount} salida(s) correctamente!`, {
         id: toastId,
       });
-      setFolios([""]);
+      setFolios(Array(8).fill(""));
+      setFolioDetails({});
       setTimeout(() => inputRefs.current[0]?.focus(), 100);
     } else {
       toast.error(
         `Se guardaron ${successCount}. Hubo ${errors.length} error(s).`,
-        {
-          id: toastId,
-          duration: 6000,
-        },
+        { id: toastId, duration: 6000 },
       );
-
-      const failedFolios = validFolios.filter((f) =>
-        errors.some((e) => e.includes(`Folio ${f}`)),
-      );
-      setFolios(failedFolios.length > 0 ? failedFolios : [""]);
     }
   };
 
@@ -110,5 +144,6 @@ export const useL12ExitForm = () => {
     handleRemoveRow,
     handleSubmit,
     inputRefs,
+    folioDetails,
   };
 };
