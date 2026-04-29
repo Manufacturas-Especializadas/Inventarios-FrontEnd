@@ -5,6 +5,7 @@ import { useEntryHistory } from "./useEntryHistory";
 import { useExitHistory } from "./useExitHistory";
 import { useEntryMutations } from "./useEntryMutations";
 import toast from "react-hot-toast";
+import { useExitMutations } from "./useExitMutations";
 
 const ITEMS_PER_PAGE = 10;
 export type TabType = "balance" | "entries" | "exits";
@@ -38,6 +39,7 @@ export const useL12Database = (lineId: number) => {
   } = useExitHistory(lineId);
 
   const { deleteEntry, isProcessing: isDeletingEntry } = useEntryMutations();
+  const { deleteExit, isProcessing: isDeletingExit } = useExitMutations();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
@@ -69,6 +71,13 @@ export const useL12Database = (lineId: number) => {
   const handleDeleteEntry = async (id: number) => {
     if (await deleteEntry(id)) {
       refetchEntries();
+      refetchBalance();
+    }
+  };
+
+  const handleDeleteExit = async (id: number) => {
+    if (await deleteExit(id)) {
+      refetchExits();
       refetchBalance();
     }
   };
@@ -210,5 +219,7 @@ export const useL12Database = (lineId: number) => {
     handleReprint,
     loadingExits,
     filteredExitHistory,
+    isDeletingExit,
+    handleDeleteExit,
   };
 };
