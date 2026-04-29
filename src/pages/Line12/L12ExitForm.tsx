@@ -1,6 +1,13 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  Plus,
+  Trash2,
+  LogIn,
+  DatabaseIcon,
+} from "lucide-react";
 import { useL12ExitForm } from "../../hooks/useL12ExitForm";
 
 export const L12ExitForm = () => {
@@ -28,6 +35,27 @@ export const L12ExitForm = () => {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 pb-20">
+      <div className="flex justify-end gap-3 pb-2 border-b border-slate-200">
+        <button
+          onClick={() => navigate("/entradas-linea-12")}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 
+          rounded-lg font-semibold hover:bg-blue-100 transition-colors shadow-sm 
+          hover:cursor-pointer"
+        >
+          <LogIn size={18} />
+          Ir a Entradas
+        </button>
+
+        <button
+          onClick={() => navigate("/base-de-datos-l12")}
+          className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white 
+          rounded-lg font-semibold hover:bg-slate-900 transition-colors shadow-sm 
+          hover:cursor-pointer"
+        >
+          <DatabaseIcon size={18} />
+          Base de Datos
+        </button>
+      </div>
       <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
