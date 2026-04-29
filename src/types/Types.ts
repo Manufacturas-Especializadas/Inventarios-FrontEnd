@@ -58,6 +58,11 @@ export interface EntryUpdateDetail {
   boxesQuantity: number;
 }
 
+export interface ExitByFolio {
+  lineId: number;
+  folio: string;
+}
+
 export interface ExitHeader {
   lineId: number;
   shopOrder1: string;
