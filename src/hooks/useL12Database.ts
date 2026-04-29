@@ -5,6 +5,7 @@ import { useEntryHistory } from "./useEntryHistory";
 import { useExitHistory } from "./useExitHistory";
 import { useEntryMutations } from "./useEntryMutations";
 import toast from "react-hot-toast";
+import { useExitMutations } from "./useExitMutations";
 
 const ITEMS_PER_PAGE = 10;
 export type TabType = "balance" | "entries" | "exits";
@@ -31,9 +32,14 @@ export const useL12Database = (lineId: number) => {
     refetch: refetchEntries,
   } = useEntryHistory(lineId);
 
-  const { refetch: refetchExits } = useExitHistory(lineId);
+  const {
+    history: exitHistory,
+    isLoading: loadingExits,
+    refetch: refetchExits,
+  } = useExitHistory(lineId);
 
   const { deleteEntry, isProcessing: isDeletingEntry } = useEntryMutations();
+  const { deleteExit, isProcessing: isDeletingExit } = useExitMutations();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
@@ -68,6 +74,29 @@ export const useL12Database = (lineId: number) => {
       refetchBalance();
     }
   };
+
+  const handleDeleteExit = async (id: number) => {
+    if (await deleteExit(id)) {
+      refetchExits();
+      refetchBalance();
+    }
+  };
+
+  const filteredExitHistory = useMemo(() => {
+    if (!historySearch) return exitHistory;
+
+    const lowerSearch = historySearch.toLocaleLowerCase();
+
+    return exitHistory.filter(
+      (ticket) =>
+        ticket.id.toString().includes(lowerSearch) ||
+        ticket.shopOrder1?.toLocaleLowerCase().includes(lowerSearch) ||
+        ticket.shopOrder2?.toLocaleLowerCase().includes(lowerSearch) ||
+        ticket.details.some((d) =>
+          d.partNumber.toLowerCase().includes(lowerSearch),
+        ),
+    );
+  }, [exitHistory, historySearch]);
 
   const handleReprint = (folio: string, shopOrder: string) => {
     if (!folio) {
@@ -188,5 +217,9 @@ export const useL12Database = (lineId: number) => {
     filteredEntryHistory,
     foliosToPrint,
     handleReprint,
+    loadingExits,
+    filteredExitHistory,
+    isDeletingExit,
+    handleDeleteExit,
   };
 };
