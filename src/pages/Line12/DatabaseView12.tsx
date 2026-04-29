@@ -50,7 +50,8 @@ export const DatabaseView12 = () => {
     handleToggleSelectAll,
     handleBulkReprint,
     filteredExitHistory,
-    loadingExits,
+    isDeletingExit,
+    handleDeleteExit,
   } = useL12Database(LINE_ID);
 
   return (
@@ -225,9 +226,10 @@ export const DatabaseView12 = () => {
           {activeTab === "exits" && (
             <ExitHistoryTable
               data={filteredExitHistory}
-              isDeleting={loadingExits}
+              isDeleting={isDeletingExit}
               onEdit={(exit) => setEditingRecord({ type: "exit", data: exit })}
-              // onDelete={h}
+              onDelete={handleDeleteExit}
+              isLoading={isDeletingExit}
             />
           )}
         </div>
