@@ -5,6 +5,7 @@ import { DatabaseView10 } from "../pages/Line10/DatabaseView10";
 import { L12EntryForm } from "../pages/Line12/L12EntryForm";
 import { DatabaseView12 } from "../pages/Line12/DatabaseView12";
 import { ShippingDashboard } from "../pages/Shipping/ShippingDashboard";
+import { L12ExitForm } from "../pages/Line12/L12ExitForm";
 
 export const MyRoutes = () => {
   return (
@@ -14,6 +15,7 @@ export const MyRoutes = () => {
       <Route path="/base-de-datos-l10" element={<DatabaseView10 />} />
 
       <Route path="/entradas-linea-12" element={<L12EntryForm />} />
+      <Route path="/salidas-l12" element={<L12ExitForm />} />
       <Route path="/base-de-datos-l12" element={<DatabaseView12 />} />
 
       <Route path="/embarques" element={<ShippingDashboard />} />
