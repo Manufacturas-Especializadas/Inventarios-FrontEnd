@@ -15,6 +15,7 @@ import { EditTransactionModal } from "../../components/Modals/EditTransactionMod
 import { useL12Database } from "../../hooks/useL12Database";
 import Barcode from "react-barcode";
 import Logo from "../../assets/logomesa.png";
+import { ExitHistoryTable } from "../../components/L10/ExitHistoryTable";
 
 const LINE_ID = 11;
 
@@ -48,6 +49,8 @@ export const DatabaseView12 = () => {
     handleToggleSelect,
     handleToggleSelectAll,
     handleBulkReprint,
+    filteredExitHistory,
+    loadingExits,
   } = useL12Database(LINE_ID);
 
   return (
@@ -216,6 +219,15 @@ export const DatabaseView12 = () => {
               onToggleSelectAll={handleToggleSelectAll}
               onBulkPrint={handleBulkReprint}
               showShopOrder={true}
+            />
+          )}
+
+          {activeTab === "exits" && (
+            <ExitHistoryTable
+              data={filteredExitHistory}
+              isDeleting={loadingExits}
+              onEdit={(exit) => setEditingRecord({ type: "exit", data: exit })}
+              // onDelete={h}
             />
           )}
         </div>
