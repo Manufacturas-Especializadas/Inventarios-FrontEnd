@@ -68,6 +68,7 @@ export const DatabaseView12 = () => {
             Ir a Entradas
           </button>
           <button
+            onClick={() => navigate("/salidas-l12")}
             className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600
           rounded-lg font-semibold hover:bg-olive-100 transition-colors shadow-sm
           hover:cursor-pointer"

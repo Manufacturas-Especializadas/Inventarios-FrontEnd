@@ -49,6 +49,7 @@ export const L12EntryForm = () => {
             </div>
             <button
               type="button"
+              onClick={() => navigate("/salidas-l12")}
               className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 
               rounded-lg font-semibold hover:bg-blue-100 transition-colors shadow-sm 
               hover:cursor-pointer"
