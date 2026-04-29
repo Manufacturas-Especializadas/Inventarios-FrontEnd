@@ -27,11 +27,12 @@ export const useL12ExitForm = () => {
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>,
   ) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-
+    if (e.key === "Enter" || e.key === "Tab") {
       const currentFolio = folios[index].trim();
+
       if (currentFolio !== "") {
+        e.preventDefault();
+
         try {
           const toastId = toast.loading("Buscando folio...");
           const preview = await lService.getFolioPreview(
@@ -59,6 +60,8 @@ export const useL12ExitForm = () => {
 
           inputRefs.current[index]?.select();
         }
+      } else if (e.key === "Enter") {
+        e.preventDefault();
       }
     }
   };
