@@ -31,7 +31,11 @@ export const useL12Database = (lineId: number) => {
     refetch: refetchEntries,
   } = useEntryHistory(lineId);
 
-  const { refetch: refetchExits } = useExitHistory(lineId);
+  const {
+    history: exitHistory,
+    isLoading: loadingExits,
+    refetch: refetchExits,
+  } = useExitHistory(lineId);
 
   const { deleteEntry, isProcessing: isDeletingEntry } = useEntryMutations();
 
@@ -68,6 +72,22 @@ export const useL12Database = (lineId: number) => {
       refetchBalance();
     }
   };
+
+  const filteredExitHistory = useMemo(() => {
+    if (!historySearch) return exitHistory;
+
+    const lowerSearch = historySearch.toLocaleLowerCase();
+
+    return exitHistory.filter(
+      (ticket) =>
+        ticket.id.toString().includes(lowerSearch) ||
+        ticket.shopOrder1?.toLocaleLowerCase().includes(lowerSearch) ||
+        ticket.shopOrder2?.toLocaleLowerCase().includes(lowerSearch) ||
+        ticket.details.some((d) =>
+          d.partNumber.toLowerCase().includes(lowerSearch),
+        ),
+    );
+  }, [exitHistory, historySearch]);
 
   const handleReprint = (folio: string, shopOrder: string) => {
     if (!folio) {
@@ -188,5 +208,7 @@ export const useL12Database = (lineId: number) => {
     filteredEntryHistory,
     foliosToPrint,
     handleReprint,
+    loadingExits,
+    filteredExitHistory,
   };
 };
