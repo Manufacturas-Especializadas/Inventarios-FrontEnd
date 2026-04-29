@@ -3,6 +3,7 @@ import type {
   Balance,
   EntryHeader,
   EntryUpdate,
+  ExitByFolio,
   ExitHeader,
   ExitUpdate,
   HistoryEntry,
@@ -21,6 +22,7 @@ class LService {
   private updateEntriesEndpoint = API_CONFIG.endpoints.Lines.updateEntries;
   private deleteEntriesEndpoint = API_CONFIG.endpoints.Lines.deleteEntries;
   private createExitEndpoint = API_CONFIG.endpoints.Lines.exits;
+  private createExitByFolioEndpoint = API_CONFIG.endpoints.Lines.exitByFolio;
   private updateExitEndpoint = API_CONFIG.endpoints.Lines.update;
   private deleteExitEndpoint = API_CONFIG.endpoints.Lines.delete;
 
@@ -86,6 +88,10 @@ class LService {
 
   async createExit(data: ExitHeader): Promise<void> {
     return apiClient.post(this.createExitEndpoint, data);
+  }
+
+  async createExitByFolio(data: ExitByFolio): Promise<void> {
+    return apiClient.post(this.createExitByFolioEndpoint, data);
   }
 
   async update(data: ExitUpdate, id: number): Promise<void> {
