@@ -18,6 +18,7 @@ export const API_CONFIG = {
       historyExits: "/api/Exits/history/",
       exits: "/api/Exits/CreateExit",
       exitByFolio: "/api/Exits/CreateExitByFolio",
+      previewExits: "/api/Exits/preview/",
       update: "/api/Exits/UpdateExit/",
       delete: "/api/Exits/DeleteExit/",
     },
