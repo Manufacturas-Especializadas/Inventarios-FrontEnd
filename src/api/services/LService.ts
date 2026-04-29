@@ -18,6 +18,7 @@ class LService {
   private getHistoryExitsEndpoint = API_CONFIG.endpoints.Lines.historyExits;
   private exportToExcelEndpoint = API_CONFIG.endpoints.Lines.export;
   private stockEndpoint = API_CONFIG.endpoints.Lines.stock;
+  private previewFolioEndpoint = API_CONFIG.endpoints.Lines.previewExits;
   private createEndpoint = API_CONFIG.endpoints.Lines.entries;
   private updateEntriesEndpoint = API_CONFIG.endpoints.Lines.updateEntries;
   private deleteEntriesEndpoint = API_CONFIG.endpoints.Lines.deleteEntries;
@@ -72,6 +73,10 @@ class LService {
 
   async getStock(lineId: number, partNumber: string): Promise<Stock> {
     return apiClient.get<Stock>(`${this.stockEndpoint}${lineId}/${partNumber}`);
+  }
+
+  async getFolioPreview(lineId: number, folio: string): Promise<any> {
+    return apiClient.get<any>(`${this.previewFolioEndpoint}${lineId}/${folio}`);
   }
 
   async create(data: EntryHeader) {
