@@ -37,8 +37,9 @@ export const EntryForm10 = () => {
 
   const handlePartNumberChange = (index: number, value: string) => {
     const newItems = [...items];
-    newItems[index].partNumber = value;
-    newItems[index].client = value ? getClientByPart(value) : "";
+    const upperValue = value.toUpperCase();
+    newItems[index].partNumber = upperValue;
+    newItems[index].client = upperValue ? getClientByPart(upperValue) : "";
     setItems(newItems);
   };
 
@@ -137,7 +138,7 @@ export const EntryForm10 = () => {
                 </label>
                 <input
                   className="w-full bg-slate-50 p-2 rounded-lg text-sm font-mono 
-                  outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  outline-none focus:ring-2 focus:ring-blue-500 transition-all uppercase"
                   value={item.partNumber}
                   onChange={(e) =>
                     handlePartNumberChange(index, e.target.value)
