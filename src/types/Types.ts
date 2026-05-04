@@ -127,6 +127,10 @@ export interface ExitRecord {
   [key: string]: any;
 }
 
+export interface ExitReportGeneratorProps {
+  availableExits: ExitRecord[];
+}
+
 export interface UpdateDetail {
   partNumber: string;
   client: string;
