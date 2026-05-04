@@ -16,6 +16,7 @@ import { useL12Database } from "../../hooks/useL12Database";
 import Barcode from "react-barcode";
 import Logo from "../../assets/logomesa.png";
 import { ExitHistoryTable } from "../../components/L10/ExitHistoryTable";
+import { ExitReportGenerator } from "./ExitReportGenerator";
 
 const LINE_ID = 11;
 
@@ -56,13 +57,13 @@ export const DatabaseView12 = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto space-y-6 pb-20 print:hidden">
+      <div className="max-w-7xl mx-auto space-y-6 pb-20">
         <div className="flex justify-end gap-3 pb-2 border-b border-slate-200">
           <button
             onClick={() => navigate("/entradas-linea-12")}
             className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600
           rounded-lg font-semibold hover:bg-emerald-100 transition-colors shadow-sm
-          hover:cursor-pointer"
+          hover:cursor-pointer print:hidden"
           >
             <LogIn size={18} />
             Ir a Entradas
@@ -71,7 +72,7 @@ export const DatabaseView12 = () => {
             onClick={() => navigate("/salidas-l12")}
             className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600
           rounded-lg font-semibold hover:bg-olive-100 transition-colors shadow-sm
-          hover:cursor-pointer"
+          hover:cursor-pointer print:hidden"
           >
             <LogOut size={18} /> Ir a Salidas
           </button>
@@ -79,7 +80,7 @@ export const DatabaseView12 = () => {
 
         <div
           className="flex items-center justify-between bg-white p-6 rounded-2xl
-        border border-slate-200 shadow-sm"
+        border border-slate-200 shadow-sm print:hidden"
         >
           <div className="flex items-center gap-3">
             <div
@@ -131,7 +132,7 @@ export const DatabaseView12 = () => {
               setHistorySearch("");
             }}
             className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-2xl
-              transition-all ${
+              transition-all print:hidden ${
                 activeTab === "balance"
                   ? "bg-white text-blue-600 border-t border-r border-slate-200 -mb-px"
                   : "text-slate-500 hover:bg-slate-50"
@@ -145,7 +146,8 @@ export const DatabaseView12 = () => {
               setActiveTab("entries");
               setHistorySearch("");
             }}
-            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl transition-all
+            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl 
+              transition-all print:hidden
               ${
                 activeTab === "entries"
                   ? "bg-white text-emerald-600 border-t border-l border-r border-slate-200 -mb-px"
@@ -160,7 +162,8 @@ export const DatabaseView12 = () => {
               setActiveTab("exits");
               setHistorySearch("");
             }}
-            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl transition-all
+            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl 
+              transition-all print:hidden
               ${
                 activeTab === "exits"
                   ? "bg-white text-orange-600 border-t border-l border-r border-slate-200 -mb-px"
@@ -170,12 +173,29 @@ export const DatabaseView12 = () => {
           >
             <History size={18} /> Historial de Salidas
           </button>
+
+          <button
+            onClick={() => {
+              setActiveTab("reports");
+              setHistorySearch("");
+            }}
+            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl 
+              transition-all print:hidden
+                  ${
+                    activeTab === "reports"
+                      ? "bg-white text-indigo-600 border-t border-l border-r border-slate-200 -mb-px"
+                      : "text-slate-500 hover:bg-slate-50"
+                  }
+                `}
+          >
+            <ListTodo size={18} /> Generar Reportes
+          </button>
         </div>
 
         {(activeTab === "entries" || activeTab === "exits") && (
           <div
             className="bg-white p-4 border border-slate-200 rounded-2xl 
-          shadow-sm flex items-center gap-3"
+            shadow-sm flex items-center gap-3 print:hidden"
           >
             <Search size={20} className="text-slate-400" />
             <input
@@ -189,8 +209,8 @@ export const DatabaseView12 = () => {
         )}
 
         <div
-          className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden
-        flex flex-col rounded-tl-none"
+          className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden 
+          print:overflow-visible print:border-none print:shadow-none flex flex-col rounded-tl-none"
         >
           {activeTab === "balance" && (
             <BalanceTable
@@ -231,6 +251,37 @@ export const DatabaseView12 = () => {
               onEdit={(exit) => setEditingRecord({ type: "exit", data: exit })}
               onDelete={handleDeleteExit}
               isLoading={isDeletingExit}
+            />
+          )}
+
+          {activeTab === "reports" && (
+            <ExitReportGenerator
+              availableExits={filteredExitHistory.map((exit: any) => ({
+                folio: String(
+                  exit.folio || exit.Folio || exit.id || exit.Id || "",
+                ),
+
+                shopOrder:
+                  exit.shopOrder ||
+                  exit.ShopOrder ||
+                  exit.shopOrder1 ||
+                  exit.ShopOrder1 ||
+                  "",
+
+                partNumber:
+                  exit.partNumber ||
+                  exit.PartNumber ||
+                  exit.details?.[0]?.partNumber ||
+                  exit.Details?.[0]?.PartNumber ||
+                  "",
+
+                quantity:
+                  exit.quantity ||
+                  exit.Quantity ||
+                  exit.details?.[0]?.quantity ||
+                  exit.Details?.[0]?.Quantity ||
+                  0,
+              }))}
             />
           )}
         </div>

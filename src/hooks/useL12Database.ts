@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { useExitMutations } from "./useExitMutations";
 
 const ITEMS_PER_PAGE = 10;
-export type TabType = "balance" | "entries" | "exits";
+export type TabType = "balance" | "entries" | "exits" | "reports";
 
 export const useL12Database = (lineId: number) => {
   const [activeTab, setActiveTab] = useState<TabType>("balance");

@@ -7,6 +7,7 @@ export const App = () => {
   return (
     <BrowserRouter>
       <Toaster
+        containerClassName="print:hidden"
         toastOptions={{
           className: "",
           style: {
