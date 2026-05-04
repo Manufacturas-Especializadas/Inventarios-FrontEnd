@@ -16,6 +16,7 @@ import { useL12Database } from "../../hooks/useL12Database";
 import Barcode from "react-barcode";
 import Logo from "../../assets/logomesa.png";
 import { ExitHistoryTable } from "../../components/L10/ExitHistoryTable";
+import { ExitReportGenerator } from "./ExitReportGenerator";
 
 const LINE_ID = 11;
 
@@ -170,6 +171,22 @@ export const DatabaseView12 = () => {
           >
             <History size={18} /> Historial de Salidas
           </button>
+
+          <button
+            onClick={() => {
+              setActiveTab("reports");
+              setHistorySearch("");
+            }}
+            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl transition-all
+                  ${
+                    activeTab === "reports"
+                      ? "bg-white text-indigo-600 border-t border-l border-r border-slate-200 -mb-px"
+                      : "text-slate-500 hover:bg-slate-50"
+                  }
+                `}
+          >
+            <ListTodo size={18} /> Generar Reportes
+          </button>
         </div>
 
         {(activeTab === "entries" || activeTab === "exits") && (
@@ -231,6 +248,37 @@ export const DatabaseView12 = () => {
               onEdit={(exit) => setEditingRecord({ type: "exit", data: exit })}
               onDelete={handleDeleteExit}
               isLoading={isDeletingExit}
+            />
+          )}
+
+          {activeTab === "reports" && (
+            <ExitReportGenerator
+              availableExits={filteredExitHistory.map((exit: any) => ({
+                folio: String(
+                  exit.folio || exit.Folio || exit.id || exit.Id || "",
+                ),
+
+                shopOrder:
+                  exit.shopOrder ||
+                  exit.ShopOrder ||
+                  exit.shopOrder1 ||
+                  exit.ShopOrder1 ||
+                  "",
+
+                partNumber:
+                  exit.partNumber ||
+                  exit.PartNumber ||
+                  exit.details?.[0]?.partNumber ||
+                  exit.Details?.[0]?.PartNumber ||
+                  "",
+
+                quantity:
+                  exit.quantity ||
+                  exit.Quantity ||
+                  exit.details?.[0]?.quantity ||
+                  exit.Details?.[0]?.Quantity ||
+                  0,
+              }))}
             />
           )}
         </div>
