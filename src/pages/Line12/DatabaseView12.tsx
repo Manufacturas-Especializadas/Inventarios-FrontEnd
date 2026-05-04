@@ -195,7 +195,7 @@ export const DatabaseView12 = () => {
         {(activeTab === "entries" || activeTab === "exits") && (
           <div
             className="bg-white p-4 border border-slate-200 rounded-2xl 
-          shadow-sm flex items-center gap-3"
+            shadow-sm flex items-center gap-3 print:hidden"
           >
             <Search size={20} className="text-slate-400" />
             <input
@@ -209,8 +209,8 @@ export const DatabaseView12 = () => {
         )}
 
         <div
-          className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden
-        flex flex-col rounded-tl-none"
+          className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden 
+          print:overflow-visible print:border-none print:shadow-none flex flex-col rounded-tl-none"
         >
           {activeTab === "balance" && (
             <BalanceTable
