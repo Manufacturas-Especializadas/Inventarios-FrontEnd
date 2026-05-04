@@ -257,32 +257,48 @@ export const DatabaseView12 = () => {
 
           {activeTab === "reports" && (
             <ExitReportGenerator
-              availableExits={filteredExitHistory.map((exit: any) => ({
-                folio: String(
-                  exit.folio || exit.Folio || exit.id || exit.Id || "",
-                ),
+              availableExits={filteredEntryHistory
+                .filter((entry: any) => {
+                  const qty =
+                    entry.currentQuantity ||
+                    entry.CurrentQuantity ||
+                    entry.quantity ||
+                    entry.Quantity ||
+                    entry.details?.[0]?.currentQuantity ||
+                    entry.Details?.[0]?.CurrentQuantity ||
+                    entry.details?.[0]?.quantity ||
+                    entry.Details?.[0]?.Quantity ||
+                    0;
 
-                shopOrder:
-                  exit.shopOrder ||
-                  exit.ShopOrder ||
-                  exit.shopOrder1 ||
-                  exit.ShopOrder1 ||
-                  "",
-
-                partNumber:
-                  exit.partNumber ||
-                  exit.PartNumber ||
-                  exit.details?.[0]?.partNumber ||
-                  exit.Details?.[0]?.PartNumber ||
-                  "",
-
-                quantity:
-                  exit.quantity ||
-                  exit.Quantity ||
-                  exit.details?.[0]?.quantity ||
-                  exit.Details?.[0]?.Quantity ||
-                  0,
-              }))}
+                  return Number(qty) > 0;
+                })
+                .map((entry: any) => ({
+                  folio: String(
+                    entry.folio || entry.Folio || entry.id || entry.Id || "",
+                  ),
+                  shopOrder:
+                    entry.shopOrder ||
+                    entry.ShopOrder ||
+                    entry.shopOrder1 ||
+                    entry.ShopOrder1 ||
+                    "",
+                  partNumber:
+                    entry.partNumber ||
+                    entry.PartNumber ||
+                    entry.details?.[0]?.partNumber ||
+                    entry.Details?.[0]?.PartNumber ||
+                    "",
+                  quantity:
+                    entry.currentQuantity ||
+                    entry.CurrentQuantity ||
+                    entry.quantity ||
+                    entry.Quantity ||
+                    entry.details?.[0]?.currentQuantity ||
+                    entry.Details?.[0]?.CurrentQuantity ||
+                    entry.details?.[0]?.quantity ||
+                    entry.Details?.[0]?.Quantity ||
+                    0,
+                }))}
             />
           )}
         </div>
