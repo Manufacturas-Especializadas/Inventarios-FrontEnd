@@ -15,6 +15,7 @@ interface Props {
   onToggleSelectAll?: (entries: HistoryEntry[], isSelected: boolean) => void;
   onBulkPrint?: () => void;
   showShopOrder?: boolean;
+  folio?: boolean;
 }
 
 export const EntryHistoryTable = ({
@@ -30,6 +31,7 @@ export const EntryHistoryTable = ({
   onToggleSelect,
   onBulkPrint,
   showShopOrder = false,
+  folio = false,
 }: Props) => {
   const isAllSelected =
     data.length > 0 &&
@@ -80,6 +82,11 @@ export const EntryHistoryTable = ({
               <th className="px-4 py-4 text-xs font-bold text-emerald-700 uppercase w-40">
                 Fecha y Hora
               </th>
+              {folio && (
+                <th className="px-4 py-4 text-xs font-bold text-emerald-700 uppercase w-40">
+                  Folio
+                </th>
+              )}
               {showShopOrder && (
                 <th className="px-4 py-4 text-xs font-bold text-emerald-700 uppercase w-40">
                   ShopOrder
@@ -148,6 +155,11 @@ export const EntryHistoryTable = ({
                     <td className="px-4 py-4 text-sm font-medium text-slate-500">
                       {formatDate(entry.createdAt)}
                     </td>
+                    {folio && (
+                      <td className="px-4 py-4 text-sm font-medium text-slate-500">
+                        {entry.folio || "N/A"}
+                      </td>
+                    )}
                     {showShopOrder && (
                       <td className="px-4 py-4 text-sm font-medium text-slate-500">
                         {entry.shopOrder || "N/A"}
