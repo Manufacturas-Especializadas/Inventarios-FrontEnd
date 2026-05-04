@@ -57,7 +57,7 @@ export const DatabaseView12 = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto space-y-6 pb-20 print:hidden">
+      <div className="max-w-7xl mx-auto space-y-6 pb-20">
         <div className="flex justify-end gap-3 pb-2 border-b border-slate-200">
           <button
             onClick={() => navigate("/entradas-linea-12")}
