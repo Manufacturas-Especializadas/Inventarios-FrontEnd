@@ -63,7 +63,7 @@ export const DatabaseView12 = () => {
             onClick={() => navigate("/entradas-linea-12")}
             className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600
           rounded-lg font-semibold hover:bg-emerald-100 transition-colors shadow-sm
-          hover:cursor-pointer"
+          hover:cursor-pointer print:hidden"
           >
             <LogIn size={18} />
             Ir a Entradas
@@ -72,7 +72,7 @@ export const DatabaseView12 = () => {
             onClick={() => navigate("/salidas-l12")}
             className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600
           rounded-lg font-semibold hover:bg-olive-100 transition-colors shadow-sm
-          hover:cursor-pointer"
+          hover:cursor-pointer print:hidden"
           >
             <LogOut size={18} /> Ir a Salidas
           </button>
@@ -80,7 +80,7 @@ export const DatabaseView12 = () => {
 
         <div
           className="flex items-center justify-between bg-white p-6 rounded-2xl
-        border border-slate-200 shadow-sm"
+        border border-slate-200 shadow-sm print:hidden"
         >
           <div className="flex items-center gap-3">
             <div
@@ -132,7 +132,7 @@ export const DatabaseView12 = () => {
               setHistorySearch("");
             }}
             className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-2xl
-              transition-all ${
+              transition-all print:hidden ${
                 activeTab === "balance"
                   ? "bg-white text-blue-600 border-t border-r border-slate-200 -mb-px"
                   : "text-slate-500 hover:bg-slate-50"
@@ -146,7 +146,8 @@ export const DatabaseView12 = () => {
               setActiveTab("entries");
               setHistorySearch("");
             }}
-            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl transition-all
+            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl 
+              transition-all print:hidden
               ${
                 activeTab === "entries"
                   ? "bg-white text-emerald-600 border-t border-l border-r border-slate-200 -mb-px"
@@ -161,7 +162,8 @@ export const DatabaseView12 = () => {
               setActiveTab("exits");
               setHistorySearch("");
             }}
-            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl transition-all
+            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl 
+              transition-all print:hidden
               ${
                 activeTab === "exits"
                   ? "bg-white text-orange-600 border-t border-l border-r border-slate-200 -mb-px"
@@ -177,7 +179,8 @@ export const DatabaseView12 = () => {
               setActiveTab("reports");
               setHistorySearch("");
             }}
-            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl transition-all
+            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl 
+              transition-all print:hidden
                   ${
                     activeTab === "reports"
                       ? "bg-white text-indigo-600 border-t border-l border-r border-slate-200 -mb-px"
