@@ -111,6 +111,13 @@ export interface ExitUpdate {
   details: UpdateDetail[];
 }
 
+export interface ExitReportData {
+  folio: string;
+  shopOrder: string;
+  partNumber: string;
+  quantity: number;
+}
+
 export interface UpdateDetail {
   partNumber: string;
   client: string;
