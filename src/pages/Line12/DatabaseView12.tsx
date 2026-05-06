@@ -7,6 +7,7 @@ import {
   LogOut,
   RefreshCcw,
   Search,
+  ClipboardList,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BalanceTable } from "../../components/L10/BalanceTable";
@@ -17,6 +18,7 @@ import Barcode from "react-barcode";
 import Logo from "../../assets/logomesa.png";
 import { ExitHistoryTable } from "../../components/L10/ExitHistoryTable";
 import { ExitReportGenerator } from "./ExitReportGenerator";
+import { TransitReportsTable } from "../../components/L10/TransitReportsTable";
 
 const LINE_ID = 11;
 
@@ -190,6 +192,23 @@ export const DatabaseView12 = () => {
           >
             <ListTodo size={18} /> Generar Reportes
           </button>
+
+          <button
+            onClick={() => {
+              setActiveTab("transit");
+              setHistorySearch("");
+            }}
+            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl 
+              transition-all print:hidden
+                  ${
+                    activeTab === "transit"
+                      ? "bg-white text-cyan-600 border-t border-l border-r border-slate-200 -mb-px"
+                      : "text-slate-500 hover:bg-slate-50"
+                  }
+                `}
+          >
+            <ClipboardList size={18} /> Folios en Tránsito
+          </button>
         </div>
 
         {(activeTab === "entries" || activeTab === "exits") && (
@@ -301,6 +320,8 @@ export const DatabaseView12 = () => {
                 }))}
             />
           )}
+
+          {activeTab === "transit" && <TransitReportsTable lineId={LINE_ID} />}
         </div>
 
         <EditTransactionModal

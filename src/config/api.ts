@@ -19,6 +19,7 @@ export const API_CONFIG = {
       exits: "/api/Exits/CreateExit",
       exitByFolio: "/api/Exits/CreateExitByFolio",
       generateReport: "/api/Exits/Generate-Report",
+      reportLogs: "/api/Exits/report-logs/",
       previewExits: "/api/Exits/preview/",
       update: "/api/Exits/UpdateExit/",
       delete: "/api/Exits/DeleteExit/",

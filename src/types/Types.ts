@@ -137,6 +137,17 @@ export interface UpdateDetail {
   quantity: number;
 }
 
+export interface ReportLogDetail {
+  folio: string;
+  isProcessed: boolean;
+}
+
+export interface ReportLog {
+  id: number;
+  printedAt: string;
+  details: ReportLogDetail[];
+}
+
 export interface ShippingRelease {
   id: number;
   shopOrder: string;
