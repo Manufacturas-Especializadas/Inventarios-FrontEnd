@@ -119,7 +119,7 @@ export interface ExitReportData {
 }
 
 export interface ExitRecord {
-  id?: number;
+  id?: string | number;
   folio: string;
   shopOrder: string;
   partNumber: string;
