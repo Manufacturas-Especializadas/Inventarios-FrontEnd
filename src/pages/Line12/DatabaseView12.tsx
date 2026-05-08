@@ -292,9 +292,8 @@ export const DatabaseView12 = () => {
                   return Number(qty) > 0;
                 })
                 .map((entry: any) => ({
-                  folio: String(
-                    entry.folio || entry.Folio || entry.id || entry.Id || "",
-                  ),
+                  id: String(entry.id || entry.Id || ""),
+                  folio: String(entry.folio || entry.Folio || ""),
                   shopOrder:
                     entry.shopOrder ||
                     entry.ShopOrder ||
