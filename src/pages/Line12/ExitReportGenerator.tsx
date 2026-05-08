@@ -134,7 +134,6 @@ export const ExitReportGenerator = ({
             <span>Total registros: {reportData?.length || 0}</span>
           </div>
 
-          {/* TABLA */}
           <table className="w-full border border-gray-400 text-sm">
             <thead>
               <tr className="bg-gray-200 text-gray-700">
@@ -191,7 +190,6 @@ export const ExitReportGenerator = ({
             </tbody>
           </table>
 
-          {/* FOOTER */}
           <div className="mt-6 flex justify-between text-xs text-gray-500">
             <span>Página 1</span>
           </div>
