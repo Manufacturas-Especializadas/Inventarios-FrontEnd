@@ -59,7 +59,7 @@ export const EntryHistoryTable = ({
       )}
 
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left border-collapse print:hidden">
           <thead>
             <tr className="bg-emerald-50 border-b border-emerald-100">
               {showCheckboxes && (

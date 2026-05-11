@@ -119,7 +119,7 @@ export interface ExitReportData {
 }
 
 export interface ExitRecord {
-  id?: number;
+  id?: string | number;
   folio: string;
   shopOrder: string;
   partNumber: string;
@@ -135,6 +135,17 @@ export interface UpdateDetail {
   partNumber: string;
   client: string;
   quantity: number;
+}
+
+export interface ReportLogDetail {
+  folio: string;
+  isProcessed: boolean;
+}
+
+export interface ReportLog {
+  id: number;
+  printedAt: string;
+  details: ReportLogDetail[];
 }
 
 export interface ShippingRelease {

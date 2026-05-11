@@ -9,6 +9,7 @@ import type {
   ExitUpdate,
   HistoryEntry,
   HistoryExits,
+  ReportLog,
   Stock,
 } from "../../types/Types";
 import { apiClient } from "../client";
@@ -26,6 +27,7 @@ class LService {
   private createExitEndpoint = API_CONFIG.endpoints.Lines.exits;
   private createExitByFolioEndpoint = API_CONFIG.endpoints.Lines.exitByFolio;
   private generateReportEndpoint = API_CONFIG.endpoints.Lines.generateReport;
+  private reportLogsEndpoint = API_CONFIG.endpoints.Lines.reportLogs;
   private updateExitEndpoint = API_CONFIG.endpoints.Lines.update;
   private deleteExitEndpoint = API_CONFIG.endpoints.Lines.delete;
 
@@ -79,6 +81,10 @@ class LService {
 
   async getFolioPreview(lineId: number, folio: string): Promise<any> {
     return apiClient.get<any>(`${this.previewFolioEndpoint}${lineId}/${folio}`);
+  }
+
+  async getReportLogs(lineId: number): Promise<ReportLog[]> {
+    return apiClient.get<ReportLog[]>(`${this.reportLogsEndpoint}${lineId}`);
   }
 
   async create(data: EntryHeader) {
