@@ -20,6 +20,7 @@ import { ExitReportGenerator } from "./ExitReportGenerator";
 import { TransitReportsTable } from "../../components/L10/TransitReportsTable";
 import JsBarcode from "jsbarcode";
 import { useEffect, useRef } from "react";
+import { ActionButton } from "../../components/ActionButton/ActionButton";
 
 const LINE_ID = 11;
 
@@ -102,23 +103,18 @@ export const DatabaseView12 = () => {
     <>
       <div className="max-w-7xl mx-auto space-y-6 pb-20">
         <div className="flex justify-end gap-3 pb-2 border-b border-slate-200">
-          <button
+          <ActionButton
             onClick={() => navigate("/entradas-linea-12")}
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600
-          rounded-lg font-semibold hover:bg-emerald-100 transition-colors shadow-sm
-          hover:cursor-pointer print:hidden"
-          >
-            <LogIn size={18} />
-            Ir a Entradas
-          </button>
-          <button
+            icon={<LogIn size={18} />}
+            label="Ir a entradas"
+            variant="emerald"
+          />
+          <ActionButton
             onClick={() => navigate("/salidas-l12")}
-            className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600
-          rounded-lg font-semibold hover:bg-olive-100 transition-colors shadow-sm
-          hover:cursor-pointer print:hidden"
-          >
-            <LogOut size={18} /> Ir a Salidas
-          </button>
+            icon={<LogOut size={18} />}
+            label="Ir a salidas"
+            variant="orange"
+          />
         </div>
 
         <div
