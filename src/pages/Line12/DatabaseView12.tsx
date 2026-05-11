@@ -154,13 +154,12 @@ export const DatabaseView12 = () => {
               </button>
             )}
 
-            <button
-              className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700
-            rounded-lg font-bold hover:bg-slate-200 transition-all active:scale-95
-            disabled:opacity-50 hover:cursor-pointer"
-            >
-              <RefreshCcw size={18} /> Actualizar
-            </button>
+            <ActionButton
+              onClick={() => {}}
+              icon={<RefreshCcw size={18} />}
+              label="Actualizar"
+              variant="slate"
+            />
           </div>
         </div>
 
