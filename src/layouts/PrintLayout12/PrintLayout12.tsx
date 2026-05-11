@@ -46,9 +46,16 @@ export const PrintLayout12 = ({ foliosToPrint }: { foliosToPrint: any[] }) => {
     >
       <style type="text/css" media="print">
         {`
-          @page { size: 400mm 300mm; margin: 0mm; }
-          body { margin: 0; -webkit-print-color-adjust: exact; }
-        `}
+        @page {
+          size: 400mm 250mm landscape;
+          margin: 0mm;
+        }
+
+        body {
+          margin: 0;
+          -webkit-print-color-adjust: exact;
+        }
+      `}
       </style>
 
       {foliosToPrint.map((item, index) => {
