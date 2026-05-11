@@ -10,8 +10,8 @@ const PrintBarcode = ({ value }: { value: string }) => {
       JsBarcode(svgRef.current, value, {
         format: "CODE128",
         lineColor: "#000",
-        width: 3,
-        height: 100,
+        width: 1.5,
+        height: 24,
         displayValue: false,
         margin: 0,
       });
@@ -19,112 +19,118 @@ const PrintBarcode = ({ value }: { value: string }) => {
   }, [value]);
 
   return (
-    <div
+    <svg
+      ref={svgRef}
       style={{
-        transform: "scale(3.2, 2.8)",
-        transformOrigin: "center",
-        overflow: "hidden",
-        height: "65mm",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        width: "32mm",
+        height: "8mm",
+        display: "block",
       }}
-    >
-      <svg
-        ref={svgRef}
-        style={{ width: "60mm", height: "24mm", display: "block" }}
-      />
-    </div>
+    />
   );
 };
 
 export const PrintLayout12 = ({ foliosToPrint }: { foliosToPrint: any[] }) => {
   return (
     <div
-      className="hidden print:block print:absolute print:top-0 print:left-0 print:w-full
-      print:bg-white print:z-9999 print:m-0 print:p-0"
+      className="hidden print:block print:absolute print:top-0 print:left-0
+      print:w-full print:bg-white print:z-9999 print:m-0 print:p-0"
     >
       <style type="text/css" media="print">
         {`
-        @page {
-          size: 400mm 250mm landscape;
-          margin: 0mm;
-        }
+          @page {
+            size: landscape;
+            margin: 0;
+          }
 
-        body {
-          margin: 0;
-          -webkit-print-color-adjust: exact;
-        }
-      `}
+          body {
+            margin: 0;
+            -webkit-print-color-adjust: exact;
+          }
+        `}
       </style>
 
       {foliosToPrint.map((item, index) => {
         let rawFolio: any = item.folio || item;
+
         if (typeof rawFolio === "string" && rawFolio.startsWith("{")) {
           try {
             rawFolio = JSON.parse(rawFolio);
           } catch (e) {}
         }
+
         const folioString =
           typeof rawFolio === "object" && rawFolio !== null
             ? rawFolio.id || rawFolio.folio
             : rawFolio;
+
         const shopOrder = item.shopOrder || "";
         const folioText = String(folioString).split("-").pop();
 
         return (
           <div
             key={index}
-            className="relative mx-auto bg-white print:break-after-page overflow-hidden"
+            className="relative mx-auto bg-white overflow-hidden"
             style={{
-              width: "400mm",
-              height: "250mm",
-              padding: "12mm 20mm",
+              width: "100vw",
+              height: "100vh",
+              padding: "5mm 10mm 2mm 10mm",
               boxSizing: "border-box",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              overflow: "hidden",
+              gap: "2mm",
             }}
           >
             <div
               style={{
                 width: "100%",
                 display: "flex",
-                justifyContent: "flex-end",
-                marginBottom: "8mm",
+                justifyContent: "flex-center",
               }}
             >
-              <div style={{ fontSize: "20mm", fontWeight: 800, color: "#000" }}>
+              <div
+                style={{
+                  fontSize: "4mm",
+                  fontWeight: 700,
+                  color: "#000",
+                }}
+              >
                 {shopOrder}
               </div>
             </div>
+
             <div
               style={{
                 width: "100%",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                marginBottom: "10mm",
+                flex: 1,
               }}
             >
               <div
                 style={{
-                  fontSize: "125mm",
+                  fontSize: "20mm",
                   fontWeight: 900,
-                  lineHeight: 0.9,
-                  letterSpacing: "-4mm",
+                  lineHeight: 1,
+                  letterSpacing: "-1mm",
                   color: "#000",
                 }}
               >
                 {folioText}
               </div>
             </div>
+
             <div
               style={{
                 width: "100%",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "flex-end",
-                paddingLeft: "25mm",
-                paddingRight: "25mm",
-                marginTop: "5mm",
+                paddingLeft: "5mm",
+                paddingRight: "5mm",
               }}
             >
               <div
@@ -135,14 +141,26 @@ export const PrintLayout12 = ({ foliosToPrint }: { foliosToPrint: any[] }) => {
                 }}
               >
                 <PrintBarcode value={String(folioString)} />
+
+                {/* <div
+                  style={{
+                    fontSize: "3.5mm",
+                    fontWeight: 700,
+                    marginTop: "0.5mm",
+                    letterSpacing: "0.5mm",
+                  }}
+                >
+                  {folioText}
+                </div> */}
               </div>
+
               <img
                 src={Logo}
                 alt="logo"
                 style={{
-                  width: "70mm",
+                  width: "18mm",
                   objectFit: "contain",
-                  marginBottom: "10mm",
+                  marginBottom: "1mm",
                 }}
               />
             </div>
