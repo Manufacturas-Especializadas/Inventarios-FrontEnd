@@ -13,55 +13,15 @@ import { useNavigate } from "react-router-dom";
 import { BalanceTable } from "../../components/L10/BalanceTable";
 import { EntryHistoryTable } from "../../components/L10/EntryHistoryTable";
 import { EditTransactionModal } from "../../components/Modals/EditTransactionModal";
-import { useL12Database } from "../../hooks/useL12Database";
-import Logo from "../../assets/logomesa.png";
+import { useL12Database, type TabType } from "../../hooks/useL12Database";
 import { ExitHistoryTable } from "../../components/L10/ExitHistoryTable";
 import { ExitReportGenerator } from "./ExitReportGenerator";
 import { TransitReportsTable } from "../../components/L10/TransitReportsTable";
-import JsBarcode from "jsbarcode";
-import { useEffect, useRef } from "react";
+import { ActionButton } from "../../components/ActionButton/ActionButton";
+import { TabButton } from "../../components/TabButton/TabButton";
+import { PrintLayout12 } from "../../layouts/PrintLayout12/PrintLayout12";
 
 const LINE_ID = 11;
-
-const PrintBarcode = ({ value }: { value: string }) => {
-  const svgRef = useRef<SVGSVGElement | null>(null);
-
-  useEffect(() => {
-    if (svgRef.current) {
-      JsBarcode(svgRef.current, value, {
-        format: "CODE128",
-        lineColor: "#000",
-        width: 3,
-        height: 100,
-        displayValue: false,
-        margin: 0,
-      });
-    }
-  }, [value]);
-
-  return (
-    <div
-      style={{
-        transform: "scale(3.2, 2.8)",
-        transformOrigin: "center",
-        overflow: "hidden",
-        height: "65mm",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <svg
-        ref={svgRef}
-        style={{
-          width: "60mm",
-          height: "24mm",
-          display: "block",
-        }}
-      />
-    </div>
-  );
-};
 
 export const DatabaseView12 = () => {
   const navigate = useNavigate();
@@ -98,27 +58,27 @@ export const DatabaseView12 = () => {
     handleDeleteExit,
   } = useL12Database(LINE_ID);
 
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab);
+    setHistorySearch("");
+  };
+
   return (
     <>
       <div className="max-w-7xl mx-auto space-y-6 pb-20">
         <div className="flex justify-end gap-3 pb-2 border-b border-slate-200">
-          <button
+          <ActionButton
             onClick={() => navigate("/entradas-linea-12")}
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600
-          rounded-lg font-semibold hover:bg-emerald-100 transition-colors shadow-sm
-          hover:cursor-pointer print:hidden"
-          >
-            <LogIn size={18} />
-            Ir a Entradas
-          </button>
-          <button
+            icon={<LogIn size={18} />}
+            label="Ir a entradas"
+            variant="emerald"
+          />
+          <ActionButton
             onClick={() => navigate("/salidas-l12")}
-            className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600
-          rounded-lg font-semibold hover:bg-olive-100 transition-colors shadow-sm
-          hover:cursor-pointer print:hidden"
-          >
-            <LogOut size={18} /> Ir a Salidas
-          </button>
+            icon={<LogOut size={18} />}
+            label="Ir a salidas"
+            variant="orange"
+          />
         </div>
 
         <div
@@ -158,98 +118,51 @@ export const DatabaseView12 = () => {
               </button>
             )}
 
-            <button
-              className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700
-            rounded-lg font-bold hover:bg-slate-200 transition-all active:scale-95
-            disabled:opacity-50 hover:cursor-pointer"
-            >
-              <RefreshCcw size={18} /> Actualizar
-            </button>
+            <ActionButton
+              onClick={() => {}}
+              icon={<RefreshCcw size={18} />}
+              label="Actualizar"
+              variant="slate"
+            />
           </div>
         </div>
 
         <div className="flex gap-2 border-b border-slate-200">
-          <button
-            onClick={() => {
-              setActiveTab("balance");
-              setHistorySearch("");
-            }}
-            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-2xl
-              transition-all print:hidden ${
-                activeTab === "balance"
-                  ? "bg-white text-blue-600 border-t border-r border-slate-200 -mb-px"
-                  : "text-slate-500 hover:bg-slate-50"
-              }
-            `}
-          >
-            <ListTodo size={18} /> Balance Consolidado
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab("entries");
-              setHistorySearch("");
-            }}
-            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl 
-              transition-all print:hidden
-              ${
-                activeTab === "entries"
-                  ? "bg-white text-emerald-600 border-t border-l border-r border-slate-200 -mb-px"
-                  : "text-slate-500 hover:bg-slate-50"
-              }
-            `}
-          >
-            <History size={18} /> Historial de Entradas
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab("exits");
-              setHistorySearch("");
-            }}
-            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl 
-              transition-all print:hidden
-              ${
-                activeTab === "exits"
-                  ? "bg-white text-orange-600 border-t border-l border-r border-slate-200 -mb-px"
-                  : "text-slate-500 hover:bg-slate-50"
-              }
-            `}
-          >
-            <History size={18} /> Historial de Salidas
-          </button>
-
-          <button
-            onClick={() => {
-              setActiveTab("reports");
-              setHistorySearch("");
-            }}
-            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl 
-              transition-all print:hidden
-                  ${
-                    activeTab === "reports"
-                      ? "bg-white text-indigo-600 border-t border-l border-r border-slate-200 -mb-px"
-                      : "text-slate-500 hover:bg-slate-50"
-                  }
-                `}
-          >
-            <ListTodo size={18} /> Generar Reportes
-          </button>
-
-          <button
-            onClick={() => {
-              setActiveTab("transit");
-              setHistorySearch("");
-            }}
-            className={`flex items-center gap-2 px-6 py-3 font-bold text-sm rounded-t-xl 
-              transition-all print:hidden
-                  ${
-                    activeTab === "transit"
-                      ? "bg-white text-cyan-600 border-t border-l border-r border-slate-200 -mb-px"
-                      : "text-slate-500 hover:bg-slate-50"
-                  }
-                `}
-          >
-            <ClipboardList size={18} /> Folios en Tránsito
-          </button>
+          <TabButton
+            isActive={activeTab === "balance"}
+            onClick={() => handleTabChange("balance")}
+            icon={<ListTodo size={18} />}
+            label="Balance Consolidado"
+            activeColorClass="text-blue-600"
+          />
+          <TabButton
+            isActive={activeTab === "entries"}
+            onClick={() => handleTabChange("entries")}
+            icon={<History size={18} />}
+            label="Historial de Entradas"
+            activeColorClass="text-emerald-600"
+          />
+          <TabButton
+            isActive={activeTab === "exits"}
+            onClick={() => handleTabChange("exits")}
+            icon={<History size={18} />}
+            label="Historial de Salidas"
+            activeColorClass="text-orange-600"
+          />
+          <TabButton
+            isActive={activeTab === "reports"}
+            onClick={() => handleTabChange("reports")}
+            icon={<ListTodo size={18} />}
+            label="Generar Reportes"
+            activeColorClass="text-indigo-600"
+          />
+          <TabButton
+            isActive={activeTab === "transit"}
+            onClick={() => handleTabChange("transit")}
+            icon={<ClipboardList size={18} />}
+            label="Folios en Tránsito"
+            activeColorClass="text-cyan-600"
+          />
         </div>
 
         {(activeTab === "entries" || activeTab === "exits") && (
@@ -374,129 +287,7 @@ export const DatabaseView12 = () => {
           }}
         />
       </div>
-
-      <div
-        className="hidden print:block print:absolute print:top-0 print:left-0 
-        print:w-full print:bg-white print:z-9999 print:m-0 print:p-0"
-      >
-        <style type="text/css" media="print">
-          {`
-            @page { 
-              size: 400mm 300mm; 
-              margin: 0mm;
-            }
-
-            body { 
-              margin: 0; 
-              -webkit-print-color-adjust: exact;
-            }
-          `}
-        </style>
-
-        {foliosToPrint.map((item: any, index) => {
-          let rawFolio: any = item.folio || item;
-
-          if (typeof rawFolio === "string" && rawFolio.startsWith("{")) {
-            try {
-              rawFolio = JSON.parse(rawFolio);
-            } catch (e) {}
-          }
-
-          const folioString =
-            typeof rawFolio === "object" && rawFolio !== null
-              ? rawFolio.id || rawFolio.folio
-              : rawFolio;
-
-          const shopOrder = item.shopOrder || "";
-          const folioText = String(folioString).split("-").pop();
-
-          return (
-            <div
-              key={index}
-              className="relative mx-auto bg-white print:break-after-page overflow-hidden"
-              style={{
-                width: "400mm",
-                height: "250mm",
-                padding: "12mm 20mm",
-                boxSizing: "border-box",
-              }}
-            >
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginBottom: "8mm",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "20mm",
-                    fontWeight: 800,
-                    color: "#000",
-                  }}
-                >
-                  {shopOrder}
-                </div>
-              </div>
-
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginBottom: "10mm",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "125mm",
-                    fontWeight: 900,
-                    lineHeight: 0.9,
-                    letterSpacing: "-4mm",
-                    color: "#000",
-                  }}
-                >
-                  {folioText}
-                </div>
-              </div>
-
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-end",
-                  paddingLeft: "25mm",
-                  paddingRight: "25mm",
-                  marginTop: "5mm",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <PrintBarcode value={String(folioString)} />
-                </div>
-
-                <img
-                  src={Logo}
-                  alt="logo"
-                  style={{
-                    width: "70mm",
-                    objectFit: "contain",
-                    marginBottom: "10mm",
-                  }}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <PrintLayout12 foliosToPrint={foliosToPrint} />
     </>
   );
 };
