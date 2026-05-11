@@ -214,8 +214,8 @@ export const ExitReportGenerator = ({
                   <div className="w-full flex justify-center mt-2">
                     <Barcode
                       value={String(finalFolio)}
-                      width={2.2} // Ajusta el grosor de las barras
-                      height={25} // Ajusta la altura del código de barras
+                      width={2.2}
+                      height={25}
                       fontSize={18}
                       font="monospace"
                       textMargin={4}
