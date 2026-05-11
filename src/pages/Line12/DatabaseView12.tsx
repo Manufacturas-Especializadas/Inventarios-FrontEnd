@@ -14,13 +14,54 @@ import { BalanceTable } from "../../components/L10/BalanceTable";
 import { EntryHistoryTable } from "../../components/L10/EntryHistoryTable";
 import { EditTransactionModal } from "../../components/Modals/EditTransactionModal";
 import { useL12Database } from "../../hooks/useL12Database";
-import Barcode from "react-barcode";
 import Logo from "../../assets/logomesa.png";
 import { ExitHistoryTable } from "../../components/L10/ExitHistoryTable";
 import { ExitReportGenerator } from "./ExitReportGenerator";
 import { TransitReportsTable } from "../../components/L10/TransitReportsTable";
+import JsBarcode from "jsbarcode";
+import { useEffect, useRef } from "react";
 
 const LINE_ID = 11;
+
+const PrintBarcode = ({ value }: { value: string }) => {
+  const svgRef = useRef<SVGSVGElement | null>(null);
+
+  useEffect(() => {
+    if (svgRef.current) {
+      JsBarcode(svgRef.current, value, {
+        format: "CODE128",
+        lineColor: "#000",
+        width: 3,
+        height: 100,
+        displayValue: false,
+        margin: 0,
+      });
+    }
+  }, [value]);
+
+  return (
+    <div
+      style={{
+        transform: "scale(3.2, 2.8)",
+        transformOrigin: "center",
+        overflow: "hidden",
+        height: "65mm",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <svg
+        ref={svgRef}
+        style={{
+          width: "60mm",
+          height: "24mm",
+          display: "block",
+        }}
+      />
+    </div>
+  );
+};
 
 export const DatabaseView12 = () => {
   const navigate = useNavigate();
@@ -336,60 +377,121 @@ export const DatabaseView12 = () => {
 
       <div
         className="hidden print:block print:absolute print:top-0 print:left-0 
-        print:w-full print:bg-white print:z-9999 print:py-8"
+        print:w-full print:bg-white print:z-9999 print:m-0 print:p-0"
       >
+        <style type="text/css" media="print">
+          {`
+            @page { 
+              size: 400mm 300mm; 
+              margin: 0mm;
+            }
+
+            body { 
+              margin: 0; 
+              -webkit-print-color-adjust: exact;
+            }
+          `}
+        </style>
+
         {foliosToPrint.map((item: any, index) => {
           let rawFolio: any = item.folio || item;
+
           if (typeof rawFolio === "string" && rawFolio.startsWith("{")) {
             try {
               rawFolio = JSON.parse(rawFolio);
             } catch (e) {}
           }
+
           const folioString =
             typeof rawFolio === "object" && rawFolio !== null
               ? rawFolio.id || rawFolio.folio
               : rawFolio;
+
           const shopOrder = item.shopOrder || "";
           const folioText = String(folioString).split("-").pop();
 
           return (
             <div
               key={index}
-              className="relative w-[120mm] h-[65mm] mx-auto mb-12 flex items-center justify-between 
-              p-8 pt-10 bg-white text-black border-2 border-dashed border-gray-400 rounded-xl 
-              print:break-inside-avoid"
+              className="relative mx-auto bg-white print:break-after-page overflow-hidden"
+              style={{
+                width: "400mm",
+                height: "250mm",
+                padding: "12mm 20mm",
+                boxSizing: "border-box",
+              }}
             >
               <div
-                className="absolute top-4 left-8 text-sm font-bold text-slate-500 
-                uppercase tracking-widest"
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginBottom: "8mm",
+                }}
               >
-                <span className="text-black text-lg">{shopOrder}</span>
+                <div
+                  style={{
+                    fontSize: "20mm",
+                    fontWeight: 800,
+                    color: "#000",
+                  }}
+                >
+                  {shopOrder}
+                </div>
               </div>
 
-              <div className="flex flex-col items-center justify-center h-full gap-3">
-                <Barcode
-                  value={String(folioString)}
-                  width={2.2}
-                  height={50}
-                  fontSize={16}
-                  font="monospace"
-                  textMargin={6}
-                  margin={0}
-                  displayValue={true}
-                />
-                <img
-                  src={Logo}
-                  alt="Logo MESA"
-                  className="h-8 object-contain mt-1 grayscale"
-                />
-              </div>
-              <div className="flex-1 flex justify-end items-center pr-2">
-                <span
-                  className="text-[4.5rem] font-black leading-none text-black 
-                  tracking-tighter"
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: "10mm",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "125mm",
+                    fontWeight: 900,
+                    lineHeight: 0.9,
+                    letterSpacing: "-4mm",
+                    color: "#000",
+                  }}
                 >
                   {folioText}
-                </span>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-end",
+                  paddingLeft: "25mm",
+                  paddingRight: "25mm",
+                  marginTop: "5mm",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <PrintBarcode value={String(folioString)} />
+                </div>
+
+                <img
+                  src={Logo}
+                  alt="logo"
+                  style={{
+                    width: "70mm",
+                    objectFit: "contain",
+                    marginBottom: "10mm",
+                  }}
+                />
               </div>
             </div>
           );
