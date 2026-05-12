@@ -48,7 +48,16 @@ export const ExitReportGenerator = ({
 
   useEffect(() => {
     if (reportData && reportData.length > 0) {
+      const style = document.createElement("style");
+      style.id = "force-portrait";
+      style.innerHTML = `@page { size: A4 portrait !important; margin: 10mm !important; }`;
+      document.head.appendChild(style);
+
       window.print();
+
+      setTimeout(() => {
+        document.getElementById("force-portrait")?.remove();
+      }, 1000);
     }
   }, [reportData]);
 
