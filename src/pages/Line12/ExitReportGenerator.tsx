@@ -5,12 +5,16 @@ import { ExitReportSearch } from "../../components/Reports/ExitReportSearch";
 import { ExitReportTable } from "../../components/Reports/ExitReportTable";
 import { ExitReportFloatingButton } from "../../components/Reports/ExitReportFloatingButton";
 import { ExitReportPrintLayout } from "../../components/Reports/ExitReportPrintLayout";
+import { ExitReportPagination } from "../../components/Reports/ExitReportPagination";
 
 export const ExitReportGenerator = ({
   availableExits,
 }: ExitReportGeneratorProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFolios, setSelectedFolios] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const ITEMS_PER_PAGE = 10;
   const { fetchReportData, reportData, isLoading } = useGenerateReport();
 
   const filteredExits = useMemo(() => {
@@ -21,6 +25,13 @@ export const ExitReportGenerator = ({
       ),
     );
   }, [availableExits, searchTerm]);
+
+  const totalPages = Math.ceil(filteredExits.length / ITEMS_PER_PAGE);
+
+  const paginatedExits = filteredExits.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  );
 
   const handleToggleSelect = (id: string | number) => {
     const stringId = String(id);
@@ -50,9 +61,15 @@ export const ExitReportGenerator = ({
         />
 
         <ExitReportTable
-          filteredExists={filteredExits}
+          filteredExists={paginatedExits}
           selectedFolios={selectedFolios}
           handleToggleSelect={handleToggleSelect}
+        />
+
+        <ExitReportPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
         />
 
         <ExitReportFloatingButton
