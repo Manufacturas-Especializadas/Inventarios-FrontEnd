@@ -6,7 +6,7 @@ import { paginateReport } from "../../utils/paginateReport";
 export const ExitReportPrintLayout = ({ reportData }: any) => {
   if (!reportData || reportData.length === 0) return null;
 
-  const pages = paginateReport(reportData, 10);
+  const pages = paginateReport(reportData, 12);
 
   return (
     <>
@@ -45,7 +45,7 @@ export const ExitReportPrintLayout = ({ reportData }: any) => {
             }
 
             .print-page {
-              width: 210mm;
+              width: 100%;
               min-height: 297mm;
               padding: 10mm;
               box-sizing: border-box;
@@ -77,14 +77,16 @@ export const ExitReportPrintLayout = ({ reportData }: any) => {
       <div id="print-report" className="hidden print:block text-black">
         {pages.map((pageData, pageIndex) => (
           <div key={pageIndex} className="print-page font-sans">
-            <ReportHeader total={reportData.length} logo={Logo} />
+            <div className="w-full">
+              <ReportHeader total={reportData.length} logo={Logo} />
 
-            <div className="mt-4">
-              <ReportTable reportData={pageData} />
-            </div>
+              <div className="mt-5">
+                <ReportTable reportData={pageData} />
+              </div>
 
-            <div className="mt-6 flex justify-end text-xs text-slate-500">
-              Página {pageIndex + 1} de {pages.length}
+              <div className="mt-8 flex justify-end text-sm text-slate-500 font-medium">
+                Página {pageIndex + 1} de {pages.length}
+              </div>
             </div>
           </div>
         ))}
