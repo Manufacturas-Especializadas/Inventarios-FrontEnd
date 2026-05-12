@@ -18,14 +18,12 @@ export const ExitReportPrintLayout = ({ reportData }: any) => {
           }
 
           @media print {
-
-            html,
-            body {
-              width: 210mm;
-              height: 297mm;
+            html, body {
               margin: 0;
               padding: 0;
               background: white;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
             }
 
             body * {
@@ -41,7 +39,8 @@ export const ExitReportPrintLayout = ({ reportData }: any) => {
               position: absolute;
               left: 0;
               top: 0;
-              width: 100%;
+              right: 0;
+              width: auto;
             }
 
             .print-page {
@@ -64,11 +63,6 @@ export const ExitReportPrintLayout = ({ reportData }: any) => {
 
             tr {
               page-break-inside: avoid;
-            }
-
-            body {
-              -webkit-print-color-adjust: exact;
-              print-color-adjust: exact;
             }
           }
         `}
