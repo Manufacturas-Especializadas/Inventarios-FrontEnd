@@ -27,8 +27,8 @@ export const ExitReportTable = ({
               <td className="px-6 py-4">
                 <input
                   type="checkbox"
-                  checked={selectedFolios.includes(String(exit.id))}
-                  onChange={() => handleToggleSelect(exit.id!)}
+                  checked={selectedFolios.includes(String(exit.folio))}
+                  onChange={() => handleToggleSelect(exit.folio!)}
                   className="w-5 h-5 cursor-pointer rounded border-slate-300
                   text-indigo-600 focus:ring-indigo-500"
                 />
