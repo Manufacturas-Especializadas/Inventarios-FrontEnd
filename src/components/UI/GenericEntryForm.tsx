@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight, DatabaseIcon, LogIn, Plus, Save } from "lucide-react";
 import { FormField } from "../../components/FormField/FormField";
 import { useInventoryEntry } from "../../hooks/useInventoryEntry";
-import { ScannerRow } from "./ScannerRow"; // <-- Tu nuevo componente
+import { ScannerRow } from "./ScannerRow";
 
 const INITIAL_ROWS = 10;
 const createEmptyRows = (count: number) =>
