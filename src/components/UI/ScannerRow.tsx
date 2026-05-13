@@ -5,8 +5,10 @@ interface ScannerRowProps {
   partNumber: string;
   quantity: number | "";
   client: string;
+  isClientEditable: boolean;
   onPartChange: (value: string) => void;
   onQuantityChange: (value: number) => void;
+  onClientChange: (value: string) => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
   quantityRef: (el: HTMLInputElement | null) => void;
 }
@@ -15,8 +17,10 @@ export const ScannerRow = ({
   partNumber,
   quantity,
   client,
+  isClientEditable,
   onPartChange,
   onQuantityChange,
+  onClientChange,
   onKeyDown,
   quantityRef,
 }: ScannerRowProps) => {
@@ -58,12 +62,22 @@ export const ScannerRow = ({
         <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">
           Cliente
         </label>
-        <div
-          className="w-full bg-slate-100 p-2 rounded-lg text-sm text-slate-600 font-medium 
-          h-9 flex items-center"
-        >
-          {client || <span className="text-slate-300">---</span>}
-        </div>
+        {isClientEditable ? (
+          <input
+            className="w-full bg-amber-50 p-2 rounded-lg text-sm font-bold text-amber-700 outline-none 
+            focus:ring-2 focus:ring-amber-500 transition-all uppercase border border-amber-200"
+            value={client}
+            onChange={(e) => onClientChange(e.target.value.toUpperCase())}
+            placeholder="Escribir cliente..."
+          />
+        ) : (
+          <div
+            className="w-full bg-slate-100 p-2 rounded-lg text-sm text-slate-600 font-medium h-9 
+            flex items-center border border-transparent"
+          >
+            {client || <span className="text-slate-300">---</span>}
+          </div>
+        )}
       </div>
     </div>
   );

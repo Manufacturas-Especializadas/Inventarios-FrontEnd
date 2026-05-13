@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight, DatabaseIcon, LogIn, Plus, Save } from "lucide-react";
 import { FormField } from "../../components/FormField/FormField";
 import { useInventoryEntry } from "../../hooks/useInventoryEntry";
-import { ScannerRow } from "./ScannerRow"; // <-- Tu nuevo componente
+import { ScannerRow } from "./ScannerRow";
 
 const INITIAL_ROWS = 10;
 const createEmptyRows = (count: number) =>
@@ -19,6 +19,7 @@ interface GenericEntryFormProps {
   exitUrl: string;
   dbUrl: string;
   resolveClient: (partNumber: string) => string;
+  isManualClient?: (partNumber: string) => boolean;
 }
 
 export const GenericEntryForm = ({
@@ -27,6 +28,7 @@ export const GenericEntryForm = ({
   exitUrl,
   dbUrl,
   resolveClient,
+  isManualClient,
 }: GenericEntryFormProps) => {
   const { submitEntry, isSubmitting } = useInventoryEntry();
   const navigate = useNavigate();
@@ -44,7 +46,20 @@ export const GenericEntryForm = ({
     const newItems = [...items];
     const upperValue = value.toUpperCase();
     newItems[index].partNumber = upperValue;
-    newItems[index].client = upperValue ? resolveClient(upperValue) : "";
+
+    const isManual = isManualClient ? isManualClient(upperValue) : false;
+
+    newItems[index].client = isManual
+      ? ""
+      : upperValue
+        ? resolveClient(upperValue)
+        : "";
+    setItems(newItems);
+  };
+
+  const handleClientChange = (index: number, value: string) => {
+    const newItems = [...items];
+    newItems[index].client = value;
     setItems(newItems);
   };
 
@@ -122,21 +137,29 @@ export const GenericEntryForm = ({
         </div>
 
         <div className="space-y-3">
-          {items.map((item, index) => (
-            <ScannerRow
-              key={index}
-              index={index}
-              partNumber={item.partNumber}
-              quantity={item.quantity || ""}
-              client={item.client}
-              onPartChange={(val) => handlePartNumberChange(index, val)}
-              onQuantityChange={(val) => handleQuantityChange(index, val)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              quantityRef={(el) => {
-                quantityRefs.current[index] = el;
-              }}
-            />
-          ))}
+          {items.map((item, index) => {
+            const isEditable = isManualClient
+              ? isManualClient(item.partNumber)
+              : false;
+
+            return (
+              <ScannerRow
+                key={index}
+                index={index}
+                partNumber={item.partNumber}
+                quantity={item.quantity || ""}
+                client={item.client}
+                isClientEditable={isEditable}
+                onPartChange={(val) => handlePartNumberChange(index, val)}
+                onQuantityChange={(val) => handleQuantityChange(index, val)}
+                onClientChange={(val) => handleClientChange(index, val)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                quantityRef={(el) => {
+                  quantityRefs.current[index] = el;
+                }}
+              />
+            );
+          })}
         </div>
 
         <button
