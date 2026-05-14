@@ -6,9 +6,16 @@ import { useExitHistory } from "./useExitHistory";
 import { useEntryMutations } from "./useEntryMutations";
 import toast from "react-hot-toast";
 import { useExitMutations } from "./useExitMutations";
+import { lService } from "../api/services/LService";
 
 const ITEMS_PER_PAGE = 10;
-export type TabType = "balance" | "entries" | "exits" | "reports" | "transit";
+export type TabType =
+  | "balance"
+  | "entries"
+  | "exits"
+  | "reports"
+  | "transit"
+  | "ftn";
 
 export const useL12Database = (lineId: number) => {
   const [activeTab, setActiveTab] = useState<TabType>("balance");
@@ -18,6 +25,10 @@ export const useL12Database = (lineId: number) => {
   const [selectedEntries, setSelectedEntries] = useState<
     { folio: string; shopOrder: string }[]
   >([]);
+
+  const [ftnBalance, setFtnBalance] = useState<any[]>([]);
+  const [loadingFtn, setLoadingFtn] = useState(false);
+  const [isReconciling, setIsReconciling] = useState(false);
 
   const {
     balances,
@@ -54,9 +65,50 @@ export const useL12Database = (lineId: number) => {
 
   const [historySearch, setHistorySearch] = useState("");
 
+  const fetchFtnData = async () => {
+    setLoadingFtn(true);
+    try {
+      const data = await lService.getFtnBalance(lineId);
+      setFtnBalance(data);
+    } catch (error) {
+      toast.error("Error al cargar el inventario FTN");
+    } finally {
+      setLoadingFtn(false);
+    }
+  };
+
   const handleFilterChange = (field: string, value: string) => {
     setFilters((prev) => ({ ...prev, [field]: value }));
   };
+
+  const handleReconcileFtn = async (file: File) => {
+    setIsReconciling(true);
+    const toastId = toast.loading("Procesando archivo");
+
+    try {
+      const response = await lService.reconcileFtn(lineId, file);
+
+      toast.success(
+        `Conciliación completada: ${response.totalProcessed || 0} folios liquidados.`,
+        { id: toastId },
+      );
+
+      fetchFtnData();
+    } catch (error) {
+      console.error("Error en conciliación FTN:", error);
+      toast.error(
+        "Ocurrio un error al procesar el archivo. Verifica el formato",
+      );
+    } finally {
+      setIsReconciling(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "ftn") {
+      fetchFtnData();
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -66,6 +118,7 @@ export const useL12Database = (lineId: number) => {
     if (activeTab === "balance") refetchBalance();
     if (activeTab === "entries") refetchEntries();
     if (activeTab === "exits") refetchExits();
+    if (activeTab === "ftn") fetchFtnData();
   };
 
   const handleDeleteEntry = async (id: number) => {
@@ -190,6 +243,19 @@ export const useL12Database = (lineId: number) => {
     );
   }, [entryHistory, historySearch]);
 
+  const filteredFtn = useMemo(() => {
+    if (!historySearch) return ftnBalance;
+
+    const lowerSearch = historySearch.toLocaleLowerCase();
+
+    return ftnBalance.filter(
+      (item) =>
+        item.folio?.toLowerCase().includes(lowerSearch) ||
+        item.shopOrder?.toLowerCase().includes(lowerSearch) ||
+        item.partNumber?.toLowerCase().includes(lowerSearch),
+    );
+  }, [ftnBalance, historySearch]);
+
   return {
     activeTab,
     setActiveTab,
@@ -221,5 +287,9 @@ export const useL12Database = (lineId: number) => {
     filteredExitHistory,
     isDeletingExit,
     handleDeleteExit,
+    ftnBalance: filteredFtn,
+    loadingFtn,
+    isReconciling,
+    handleReconcileFtn,
   };
 };

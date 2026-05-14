@@ -8,6 +8,8 @@ import {
   RefreshCcw,
   Search,
   ClipboardList,
+  Package,
+  Upload,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BalanceTable } from "../../components/L10/BalanceTable";
@@ -20,6 +22,8 @@ import { TransitReportsTable } from "../../components/L10/TransitReportsTable";
 import { ActionButton } from "../../components/ActionButton/ActionButton";
 import { TabButton } from "../../components/TabButton/TabButton";
 import { PrintLayout12 } from "../../layouts/PrintLayout12/PrintLayout12";
+import { FtnInventortTable } from "../../components/L10/FtnInventortTable";
+import { useRef, type ChangeEvent } from "react";
 
 const LINE_ID = 11;
 
@@ -56,11 +60,26 @@ export const DatabaseView12 = () => {
     filteredExitHistory,
     isDeletingExit,
     handleDeleteExit,
+    ftnBalance,
+    loadingFtn,
+    isReconciling,
+    handleReconcileFtn,
   } = useL12Database(LINE_ID);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleTabChange = (tab: TabType) => {
     setActiveTab(tab);
     setHistorySearch("");
+  };
+
+  const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      handleReconcileFtn(file);
+      e.target.value = "";
+    }
   };
 
   return (
@@ -103,6 +122,28 @@ export const DatabaseView12 = () => {
           </div>
 
           <div className="flex items-center gap-3">
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              accept=".xlsx,.xls,.csv"
+              onChange={onFileChange}
+            />
+            {activeTab === "ftn" && (
+              <ActionButton
+                onClick={() => fileInputRef.current?.click()}
+                disabled={loadingFtn || isReconciling}
+                icon={
+                  <Upload
+                    size={18}
+                    className={isReconciling ? "animate-bounce" : ""}
+                  />
+                }
+                label={isReconciling ? "Procesando..." : "Subir archivo"}
+                variant="emerald"
+              />
+            )}
+
             {activeTab === "balance" && (
               <button
                 onClick={() => exportData(LINE_ID, "LINEA 12")}
@@ -148,6 +189,13 @@ export const DatabaseView12 = () => {
             icon={<History size={18} />}
             label="Historial de Salidas"
             activeColorClass="text-orange-600"
+          />
+          <TabButton
+            isActive={activeTab === "ftn"}
+            onClick={() => handleTabChange("ftn")}
+            icon={<Package size={18} />}
+            label="Inventario FTN"
+            activeColorClass="text-purple-600"
           />
           <TabButton
             isActive={activeTab === "reports"}
@@ -226,6 +274,10 @@ export const DatabaseView12 = () => {
               onDelete={handleDeleteExit}
               isLoading={isDeletingExit}
             />
+          )}
+
+          {activeTab === "ftn" && (
+            <FtnInventortTable data={ftnBalance} isLoading={loadingFtn} />
           )}
 
           {activeTab === "reports" && (

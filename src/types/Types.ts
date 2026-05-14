@@ -170,3 +170,17 @@ export interface RegisterScanPayload {
   shippingReleaseId: number;
   scannedLabelId: string;
 }
+
+export interface FtnBalanceItem {
+  id: number;
+  exitHeaderId: number | null;
+  lineId: number | null;
+  folio: string;
+  shopOrder: string | null;
+  partNumber: string;
+  originalQuantity: number;
+  currentQuantity: number;
+  status: string;
+  createdAt: string;
+  clearedAt: string | null;
+}

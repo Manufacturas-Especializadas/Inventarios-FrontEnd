@@ -7,6 +7,7 @@ import type {
   ExitHeader,
   ExitReportData,
   ExitUpdate,
+  FtnBalanceItem,
   HistoryEntry,
   HistoryExits,
   ReportLog,
@@ -18,9 +19,11 @@ class LService {
   private getAllEndpoint = API_CONFIG.endpoints.Lines.getAll;
   private getHistoryEntriesEndpoint = API_CONFIG.endpoints.Lines.historyEntries;
   private getHistoryExitsEndpoint = API_CONFIG.endpoints.Lines.historyExits;
+  private getFtnBalanceEndpoint = API_CONFIG.endpoints.Lines.ftnBalance;
   private exportToExcelEndpoint = API_CONFIG.endpoints.Lines.export;
   private stockEndpoint = API_CONFIG.endpoints.Lines.stock;
   private previewFolioEndpoint = API_CONFIG.endpoints.Lines.previewExits;
+  private reconcileEndpoint = API_CONFIG.endpoints.Lines.reconcile;
   private createEndpoint = API_CONFIG.endpoints.Lines.entries;
   private updateEntriesEndpoint = API_CONFIG.endpoints.Lines.updateEntries;
   private deleteEntriesEndpoint = API_CONFIG.endpoints.Lines.deleteEntries;
@@ -63,6 +66,13 @@ class LService {
     window.URL.revokeObjectURL(url);
   }
 
+  async reconcileFtn(lineId: number, file: File): Promise<any> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return apiClient.post<any>(`${this.reconcileEndpoint}${lineId}`, formData);
+  }
+
   async getHistoryEntries(lineId: number): Promise<HistoryEntry[]> {
     return apiClient.get<HistoryEntry[]>(
       `${this.getHistoryEntriesEndpoint}${lineId}`,
@@ -85,6 +95,12 @@ class LService {
 
   async getReportLogs(lineId: number): Promise<ReportLog[]> {
     return apiClient.get<ReportLog[]>(`${this.reportLogsEndpoint}${lineId}`);
+  }
+
+  async getFtnBalance(lineId: number): Promise<FtnBalanceItem[]> {
+    return apiClient.get<FtnBalanceItem[]>(
+      `${this.getFtnBalanceEndpoint}${lineId}`,
+    );
   }
 
   async create(data: EntryHeader) {
