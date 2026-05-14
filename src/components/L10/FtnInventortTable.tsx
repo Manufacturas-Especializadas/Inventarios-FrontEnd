@@ -1,4 +1,4 @@
-import { Package } from "lucide-react";
+import { CheckCircle, Package } from "lucide-react";
 
 export const FtnInventortTable = ({
   data,
@@ -46,12 +46,15 @@ export const FtnInventortTable = ({
                 {new Date(item.createdAt).toLocaleDateString("es-MX")}
               </td>
               <td className="px-6 py-4">
-                <span
-                  className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full 
-                  text-xs font-bold flex items-center w-fit gap-1"
-                >
-                  <Package size={14} /> {item.status.replace("_", " ")}
-                </span>
+                {item.status === "LIQUIDADO" ? (
+                  <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                    <CheckCircle size={14} /> COMPLETADO
+                  </span>
+                ) : (
+                  <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                    <Package size={14} /> EN TRÁNSITO
+                  </span>
+                )}
               </td>
             </tr>
           ))}
