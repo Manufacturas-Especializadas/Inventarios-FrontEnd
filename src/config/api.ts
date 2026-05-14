@@ -17,6 +17,7 @@ export const API_CONFIG = {
       updateEntries: "/api/Entries/UpdateEntry/",
       deleteEntries: "/api/Entries/DeleteEntry/",
       historyExits: "/api/Exits/history/",
+      reconcile: "/api/Ftn/reconcile/",
       exits: "/api/Exits/CreateExit",
       exitByFolio: "/api/Exits/CreateExitByFolio",
       generateReport: "/api/Exits/Generate-Report",
