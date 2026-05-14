@@ -28,6 +28,7 @@ export const useL12Database = (lineId: number) => {
 
   const [ftnBalance, setFtnBalance] = useState<any[]>([]);
   const [loadingFtn, setLoadingFtn] = useState(false);
+  const [isReconciling, setIsReconciling] = useState(false);
 
   const {
     balances,
@@ -78,6 +79,29 @@ export const useL12Database = (lineId: number) => {
 
   const handleFilterChange = (field: string, value: string) => {
     setFilters((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleReconcileFtn = async (file: File) => {
+    setIsReconciling(true);
+    const toastId = toast.loading("Procesando archivo");
+
+    try {
+      const response = await lService.reconcileFtn(lineId, file);
+
+      toast.success(
+        `Conciliación completada: ${response.totalProcessed || 0} folios liquidados.`,
+        { id: toastId },
+      );
+
+      fetchFtnData();
+    } catch (error) {
+      console.error("Error en conciliación FTN:", error);
+      toast.error(
+        "Ocurrio un error al procesar el archivo. Verifica el formato",
+      );
+    } finally {
+      setIsReconciling(false);
+    }
   };
 
   useEffect(() => {
@@ -265,5 +289,7 @@ export const useL12Database = (lineId: number) => {
     handleDeleteExit,
     ftnBalance: filteredFtn,
     loadingFtn,
+    isReconciling,
+    handleReconcileFtn,
   };
 };
