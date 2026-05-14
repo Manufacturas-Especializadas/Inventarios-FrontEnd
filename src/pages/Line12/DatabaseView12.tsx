@@ -8,6 +8,7 @@ import {
   RefreshCcw,
   Search,
   ClipboardList,
+  Package,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BalanceTable } from "../../components/L10/BalanceTable";
@@ -20,6 +21,7 @@ import { TransitReportsTable } from "../../components/L10/TransitReportsTable";
 import { ActionButton } from "../../components/ActionButton/ActionButton";
 import { TabButton } from "../../components/TabButton/TabButton";
 import { PrintLayout12 } from "../../layouts/PrintLayout12/PrintLayout12";
+import { FtnInventortTable } from "../../components/L10/FtnInventortTable";
 
 const LINE_ID = 11;
 
@@ -56,6 +58,8 @@ export const DatabaseView12 = () => {
     filteredExitHistory,
     isDeletingExit,
     handleDeleteExit,
+    ftnBalance,
+    loadingFtn,
   } = useL12Database(LINE_ID);
 
   const handleTabChange = (tab: TabType) => {
@@ -150,6 +154,13 @@ export const DatabaseView12 = () => {
             activeColorClass="text-orange-600"
           />
           <TabButton
+            isActive={activeTab === "ftn"}
+            onClick={() => handleTabChange("ftn")}
+            icon={<Package size={18} />}
+            label="Inventario FTN"
+            activeColorClass="text-purple-600"
+          />
+          <TabButton
             isActive={activeTab === "reports"}
             onClick={() => handleTabChange("reports")}
             icon={<ListTodo size={18} />}
@@ -226,6 +237,10 @@ export const DatabaseView12 = () => {
               onDelete={handleDeleteExit}
               isLoading={isDeletingExit}
             />
+          )}
+
+          {activeTab === "ftn" && (
+            <FtnInventortTable data={ftnBalance} isLoading={loadingFtn} />
           )}
 
           {activeTab === "reports" && (
