@@ -6,6 +6,7 @@ import { useExitHistory } from "./useExitHistory";
 import { useEntryMutations } from "./useEntryMutations";
 import toast from "react-hot-toast";
 import { useExitMutations } from "./useExitMutations";
+import { lService } from "../api/services/LService";
 
 const ITEMS_PER_PAGE = 10;
 export type TabType =
@@ -24,6 +25,9 @@ export const useL12Database = (lineId: number) => {
   const [selectedEntries, setSelectedEntries] = useState<
     { folio: string; shopOrder: string }[]
   >([]);
+
+  const [ftnBalance, setFtnBalance] = useState<any[]>([]);
+  const [loadingFtn, setLoadingFtn] = useState(false);
 
   const {
     balances,
@@ -60,9 +64,27 @@ export const useL12Database = (lineId: number) => {
 
   const [historySearch, setHistorySearch] = useState("");
 
+  const fetchFtnData = async () => {
+    setLoadingFtn(true);
+    try {
+      const data = await lService.getFtnBalance(lineId);
+      setFtnBalance(data);
+    } catch (error) {
+      toast.error("Error al cargar el inventario FTN");
+    } finally {
+      setLoadingFtn(false);
+    }
+  };
+
   const handleFilterChange = (field: string, value: string) => {
     setFilters((prev) => ({ ...prev, [field]: value }));
   };
+
+  useEffect(() => {
+    if (activeTab === "ftn") {
+      fetchFtnData();
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -72,6 +94,7 @@ export const useL12Database = (lineId: number) => {
     if (activeTab === "balance") refetchBalance();
     if (activeTab === "entries") refetchEntries();
     if (activeTab === "exits") refetchExits();
+    if (activeTab === "ftn") fetchFtnData();
   };
 
   const handleDeleteEntry = async (id: number) => {
