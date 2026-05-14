@@ -219,6 +219,19 @@ export const useL12Database = (lineId: number) => {
     );
   }, [entryHistory, historySearch]);
 
+  const filteredFtn = useMemo(() => {
+    if (!historySearch) return ftnBalance;
+
+    const lowerSearch = historySearch.toLocaleLowerCase();
+
+    return ftnBalance.filter(
+      (item) =>
+        item.folio?.toLowerCase().includes(lowerSearch) ||
+        item.shopOrder?.toLowerCase().includes(lowerSearch) ||
+        item.partNumber?.toLowerCase().includes(lowerSearch),
+    );
+  }, [ftnBalance, historySearch]);
+
   return {
     activeTab,
     setActiveTab,
@@ -250,5 +263,7 @@ export const useL12Database = (lineId: number) => {
     filteredExitHistory,
     isDeletingExit,
     handleDeleteExit,
+    ftnBalance: filteredFtn,
+    loadingFtn,
   };
 };
