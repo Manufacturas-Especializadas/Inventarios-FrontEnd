@@ -7,6 +7,7 @@ import type {
   ExitHeader,
   ExitReportData,
   ExitUpdate,
+  FtnBalanceItem,
   HistoryEntry,
   HistoryExits,
   ReportLog,
@@ -18,6 +19,7 @@ class LService {
   private getAllEndpoint = API_CONFIG.endpoints.Lines.getAll;
   private getHistoryEntriesEndpoint = API_CONFIG.endpoints.Lines.historyEntries;
   private getHistoryExitsEndpoint = API_CONFIG.endpoints.Lines.historyExits;
+  private getFtnBalanceEndpoint = API_CONFIG.endpoints.Lines.ftnBalance;
   private exportToExcelEndpoint = API_CONFIG.endpoints.Lines.export;
   private stockEndpoint = API_CONFIG.endpoints.Lines.stock;
   private previewFolioEndpoint = API_CONFIG.endpoints.Lines.previewExits;
@@ -85,6 +87,12 @@ class LService {
 
   async getReportLogs(lineId: number): Promise<ReportLog[]> {
     return apiClient.get<ReportLog[]>(`${this.reportLogsEndpoint}${lineId}`);
+  }
+
+  async getFtnBalance(lineId: number): Promise<FtnBalanceItem[]> {
+    return apiClient.get<FtnBalanceItem[]>(
+      `${this.getFtnBalanceEndpoint}${lineId}`,
+    );
   }
 
   async create(data: EntryHeader) {
