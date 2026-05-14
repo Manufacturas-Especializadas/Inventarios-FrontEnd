@@ -23,6 +23,7 @@ class LService {
   private exportToExcelEndpoint = API_CONFIG.endpoints.Lines.export;
   private stockEndpoint = API_CONFIG.endpoints.Lines.stock;
   private previewFolioEndpoint = API_CONFIG.endpoints.Lines.previewExits;
+  private reconcileEndpoint = API_CONFIG.endpoints.Lines.reconcile;
   private createEndpoint = API_CONFIG.endpoints.Lines.entries;
   private updateEntriesEndpoint = API_CONFIG.endpoints.Lines.updateEntries;
   private deleteEntriesEndpoint = API_CONFIG.endpoints.Lines.deleteEntries;
@@ -63,6 +64,13 @@ class LService {
 
     link.remove();
     window.URL.revokeObjectURL(url);
+  }
+
+  async reconcileFtn(lineId: number, file: File): Promise<any> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return apiClient.post<any>(`${this.reconcileEndpoint}${lineId}`, formData);
   }
 
   async getHistoryEntries(lineId: number): Promise<HistoryEntry[]> {
