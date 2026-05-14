@@ -10,6 +10,7 @@ export const API_CONFIG = {
     Lines: {
       getAll: "/api/Balances/line/",
       export: "/api/Balances/export/line/",
+      ftnBalance: "/api/Ftn/balance/",
       stock: "/api/Exits/stock/",
       entries: "/api/Entries/Create",
       historyEntries: "/api/Entries/history/",
