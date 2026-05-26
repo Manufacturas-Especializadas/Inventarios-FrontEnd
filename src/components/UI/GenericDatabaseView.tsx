@@ -23,6 +23,7 @@ import { ExitHistoryTable } from "../L10/ExitHistoryTable";
 import { EditTransactionModal } from "../Modals/EditTransactionModal";
 import { TabButton } from "../TabButton/TabButton";
 import { DateRangePicker } from "../DateRangePicker/DateRangePicker";
+import { formatDate } from "../../utils/formatDate";
 
 const ITEMS_PER_PAGE = 10;
 type TabType = "balance" | "entries" | "exits";
@@ -112,6 +113,14 @@ export const GenericDatabaseView = ({
 
   const filteredData = useMemo(() => {
     return balances.filter((item) => {
+      const formattedEntryDate = item.lastEntryDate
+        ? formatDate(item.lastEntryDate).toLowerCase()
+        : "";
+
+      const formattedExitDate = item.lastExitDate
+        ? formatDate(item.lastExitDate).toLowerCase()
+        : "";
+
       return (
         item.partNumber
           .toLowerCase()
@@ -121,7 +130,9 @@ export const GenericDatabaseView = ({
           .includes(filters.client.toLowerCase()) &&
         item.totalEntries.toString().includes(filters.totalEntries) &&
         item.totalExits.toString().includes(filters.totalExits) &&
-        item.stock.toString().includes(filters.stock)
+        item.stock.toString().includes(filters.stock) &&
+        formattedEntryDate.includes(filters.lastEntryDate.toLowerCase()) &&
+        formattedExitDate.includes(filters.lastExitDate.toLowerCase())
       );
     });
   }, [balances, filters]);
