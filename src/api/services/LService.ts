@@ -38,11 +38,24 @@ class LService {
     return apiClient.get<Balance[]>(`${this.getAllEndpoint}${lineId}`);
   }
 
-  async exportToExcel(lineId: number, lineName: string): Promise<void> {
-    const response: any = await apiClient.get(
-      `${this.exportToExcelEndpoint}${lineId}?lineName=${encodeURIComponent(lineName)}`,
-      { responseType: "blob" },
-    );
+  async exportToExcel(
+    lineId: number,
+    lineName: string,
+    startDate?: string,
+    endDate?: string,
+  ): Promise<void> {
+    let urlString = `${this.exportToExcelEndpoint}${lineId}?lineName=${encodeURIComponent(lineName)}`;
+
+    if (startDate) {
+      urlString += `&startDate=${encodeURIComponent(startDate)}`;
+    }
+    if (endDate) {
+      urlString += `&endDate=${encodeURIComponent(endDate)}`;
+    }
+
+    const response: any = await apiClient.get(urlString, {
+      responseType: "blob",
+    });
 
     const blob = response.data
       ? new Blob([response.data])

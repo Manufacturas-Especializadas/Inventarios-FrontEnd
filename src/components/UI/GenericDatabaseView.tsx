@@ -22,6 +22,7 @@ import { EntryHistoryTable } from "../L10/EntryHistoryTable";
 import { ExitHistoryTable } from "../L10/ExitHistoryTable";
 import { EditTransactionModal } from "../Modals/EditTransactionModal";
 import { TabButton } from "../TabButton/TabButton";
+import { DateRangePicker } from "../DateRangePicker/DateRangePicker";
 
 const ITEMS_PER_PAGE = 10;
 type TabType = "balance" | "entries" | "exits";
@@ -77,6 +78,9 @@ export const GenericDatabaseView = ({
   });
 
   const [historySearch, setHistorySearch] = useState("");
+
+  const [reportStartDate, setReportStartDate] = useState("");
+  const [reportEndDate, setReportEndDate] = useState("");
 
   const handleFilterChange = (field: string, value: string) => {
     setFilters((prev) => ({ ...prev, [field]: value }));
@@ -198,18 +202,36 @@ export const GenericDatabaseView = ({
         </div>
         <div className="flex items-center gap-3">
           {activeTab === "balance" && (
-            <ActionButton
-              onClick={() => exportData(lineId, lineName)}
-              disabled={loadingBalance || isExporting || balances.length === 0}
-              icon={
-                <Download
-                  size={18}
-                  className={isExporting ? "animate-bounce" : ""}
-                />
-              }
-              label={isExporting ? "Exportando..." : "Exportar Excel"}
-              variant="emerald"
-            />
+            <div className="flex flex-col sm:flex-row items-center gap-3 mr-2">
+              <DateRangePicker
+                startDate={reportStartDate}
+                endDate={reportEndDate}
+                onStartDateChange={setReportStartDate}
+                onEndDateChange={setReportEndDate}
+                onClear={() => {
+                  setReportStartDate("");
+                  setReportEndDate("");
+                }}
+                disabled={loadingBalance || isExporting}
+              />
+
+              <ActionButton
+                onClick={() =>
+                  exportData(lineId, lineName, reportStartDate, reportEndDate)
+                }
+                disabled={
+                  loadingBalance || isExporting || balances.length === 0
+                }
+                icon={
+                  <Download
+                    size={18}
+                    className={isExporting ? "animate-bounce" : ""}
+                  />
+                }
+                label={isExporting ? "Exportando..." : "Exportar Excel"}
+                variant="emerald"
+              />
+            </div>
           )}
           <ActionButton
             onClick={handleGlobalRefetch}

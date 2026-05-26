@@ -5,12 +5,17 @@ import { lService } from "../api/services/LService";
 export const useExportExcel = () => {
   const [isExporting, setIsExporting] = useState(false);
 
-  const exportData = async (lineId: number, lineName: string) => {
+  const exportData = async (
+    lineId: number,
+    lineName: string,
+    startDate?: string,
+    endDate?: string,
+  ) => {
     setIsExporting(true);
     const toastId = toast.loading("Generando archivo Excel...");
 
     try {
-      await lService.exportToExcel(lineId, lineName);
+      await lService.exportToExcel(lineId, lineName, startDate, endDate);
       toast.success("Excel descargado correctamente", { id: toastId });
     } catch (error) {
       console.error("Error al exportar:", error);
