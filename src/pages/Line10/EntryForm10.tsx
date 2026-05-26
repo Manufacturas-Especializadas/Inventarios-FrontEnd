@@ -8,7 +8,7 @@ export const EntryForm10 = () => {
 
   return (
     <GenericEntryForm
-      lineId={9}
+      lineId={10}
       lineName="LÍNEA 10"
       exitUrl="/salidas-l10"
       dbUrl="/base-de-datos-l10"
