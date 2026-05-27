@@ -27,6 +27,7 @@ export const GenericExitForm = ({
     handleShopOrderChange,
     handlePartNumberChange,
     handleQuantityChange,
+    handleClientChange,
     handleKeyDownPart,
     handleKeyDownQuantity,
     addRow,
@@ -191,12 +192,27 @@ export const GenericExitForm = ({
                   <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">
                     Cliente
                   </label>
-                  <div
-                    className="w-full bg-slate-100 p-2 rounded-lg text-xs text-slate-600 
-                  font-medium h-9 flex items-center"
-                  >
-                    {item.client || <span className="text-slate-300">---</span>}
-                  </div>
+                  {item.isManualClient ? (
+                    <input
+                      type="text"
+                      className="w-full bg-blue-50/50 p-2 rounded-lg text-xs font-bold text-blue-700 
+                      outline-none border-2 border-blue-200 focus:border-blue-500 h-9 transition-colors"
+                      placeholder="Ej. CMX..."
+                      value={item.client}
+                      onChange={(e) =>
+                        handleClientChange(index, e.target.value)
+                      }
+                    />
+                  ) : (
+                    <div
+                      className="w-full bg-slate-100 p-2 rounded-lg text-xs text-slate-600 
+                      font-medium h-9 flex items-center"
+                    >
+                      {item.client || (
+                        <span className="text-slate-300">---</span>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="col-span-6 md:col-span-2">
