@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
+import { useInventoryExit } from "./useInventoryExit";
 import { lService } from "../api/services/LService";
 import type { ExitHeader } from "../types/Types";
-import { useInventoryExit } from "./useInventoryExit";
 
 const INITIAL_ROWS = 10;
 const createEmptyRows = (count: number) =>
@@ -12,6 +12,7 @@ const createEmptyRows = (count: number) =>
     currentStock: 0,
     quantity: 0,
     errorMsg: "",
+    isManualClient: false,
   }));
 
 export const useExitForm = (lineId: number) => {
@@ -30,13 +31,35 @@ export const useExitForm = (lineId: number) => {
   const quantityRefs = useRef<(HTMLInputElement | null)[]>([]);
   const partNumberRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const getClientByPart = (part: string): string => {
-    if (!part) return "";
+  const getClientInfo = (idLinea: number, part: string) => {
+    if (!part) return { client: "", isManual: false };
+
     const upperPart = part.toUpperCase();
-    if (upperPart.startsWith("50HE") || upperPart.startsWith("38AU")) {
-      return "CMX-D";
+
+    if (idLinea === 4) {
+      if (upperPart.startsWith("48TM")) {
+        return { client: "", isManual: true };
+      }
+      if (upperPart.startsWith("50TM") || upperPart.startsWith("48LC")) {
+        return { client: "CMX-D", isManual: false };
+      }
+      if (
+        upperPart.startsWith("48TC") ||
+        upperPart.startsWith("48AN") ||
+        upperPart.startsWith("38AU")
+      ) {
+        return { client: "CMX-C", isManual: false };
+      }
+      if (upperPart.startsWith("34") || upperPart.startsWith("35")) {
+        return { client: "CMX-E", isManual: false };
+      }
+      return { client: "", isManual: false };
     }
-    return "CMX-B";
+
+    if (upperPart.startsWith("50HE") || upperPart.startsWith("38AU")) {
+      return { client: "CMX-D", isManual: false };
+    }
+    return { client: "CMX-B", isManual: false };
   };
 
   const handleShopOrderChange = (index: number, value: string) => {
@@ -46,9 +69,21 @@ export const useExitForm = (lineId: number) => {
   };
 
   const handlePartNumberChange = (index: number, value: string) => {
+    const sanitizedValue = value.replace(/'/g, "-").toUpperCase();
+
     const newItems = [...items];
-    newItems[index].partNumber = value;
-    newItems[index].client = value ? getClientByPart(value) : "";
+    newItems[index].partNumber = sanitizedValue;
+
+    const { client, isManual } = getClientInfo(lineId, sanitizedValue);
+    newItems[index].client = client;
+    newItems[index].isManualClient = isManual;
+
+    setItems(newItems);
+  };
+
+  const handleClientChange = (index: number, value: string) => {
+    const newItems = [...items];
+    newItems[index].client = value.toUpperCase();
     setItems(newItems);
   };
 
@@ -67,6 +102,7 @@ export const useExitForm = (lineId: number) => {
         currentStock: 0,
         quantity: 0,
         errorMsg: "",
+        isManualClient: false,
       },
     ]);
   };
@@ -92,9 +128,7 @@ export const useExitForm = (lineId: number) => {
       });
 
       const duplicateIndex = items.findIndex(
-        (item, i) =>
-          i !== index &&
-          item.partNumber.toUpperCase() === partNumber.toUpperCase(),
+        (item, i) => i !== index && item.partNumber === partNumber,
       );
 
       if (duplicateIndex !== -1) {
@@ -104,6 +138,7 @@ export const useExitForm = (lineId: number) => {
           errorItems[index].partNumber = "";
           errorItems[index].client = "";
           errorItems[index].currentStock = 0;
+          errorItems[index].isManualClient = false;
           return errorItems;
         });
         quantityRefs.current[duplicateIndex]?.focus();
@@ -128,7 +163,6 @@ export const useExitForm = (lineId: number) => {
 
         quantityRefs.current[index]?.focus();
       } catch (error: any) {
-        console.error("Error al consultar API:", error);
         const errorText = error.message || String(error);
         const isNotFound =
           errorText.includes("no tiene registros") ||
@@ -164,14 +198,17 @@ export const useExitForm = (lineId: number) => {
   };
 
   const handleSave = async () => {
-    const hasInvalidQuantities = items.some(
+    const hasErrors = items.some(
       (i) =>
-        i.partNumber !== "" && (i.quantity > i.currentStock || i.quantity <= 0),
+        i.partNumber !== "" &&
+        (i.quantity > i.currentStock ||
+          i.quantity <= 0 ||
+          (i.isManualClient && i.client.trim() === "")),
     );
 
-    if (hasInvalidQuantities) {
+    if (hasErrors) {
       return toast.error(
-        "Hay filas con cantidades inválidas o superiores al stock disponible.",
+        "Hay cantidades inválidas o falta ingresar un cliente manualmente.",
       );
     }
 
@@ -207,6 +244,7 @@ export const useExitForm = (lineId: number) => {
     isSubmitting,
     handleShopOrderChange,
     handlePartNumberChange,
+    handleClientChange,
     handleQuantityChange,
     handleKeyDownPart,
     handleKeyDownQuantity,
