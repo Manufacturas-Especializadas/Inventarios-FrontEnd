@@ -4,6 +4,7 @@ import { ArrowRight, DatabaseIcon, LogIn, Plus, Save } from "lucide-react";
 import { FormField } from "../../components/FormField/FormField";
 import { useInventoryEntry } from "../../hooks/useInventoryEntry";
 import { ScannerRow } from "./ScannerRow";
+import toast from "react-hot-toast";
 
 const INITIAL_ROWS = 10;
 const createEmptyRows = (count: number) =>
@@ -44,22 +45,25 @@ export const GenericEntryForm = ({
 
   const handlePartNumberChange = (index: number, value: string) => {
     const newItems = [...items];
-    const upperValue = value.toUpperCase();
-    newItems[index].partNumber = upperValue;
 
-    const isManual = isManualClient ? isManualClient(upperValue) : false;
+    const sanitizedValue = value.replace(/'/g, "-").toUpperCase();
+
+    newItems[index].partNumber = sanitizedValue;
+
+    const isManual = isManualClient ? isManualClient(sanitizedValue) : false;
 
     newItems[index].client = isManual
       ? ""
-      : upperValue
-        ? resolveClient(upperValue)
+      : sanitizedValue
+        ? resolveClient(sanitizedValue)
         : "";
+
     setItems(newItems);
   };
 
   const handleClientChange = (index: number, value: string) => {
     const newItems = [...items];
-    newItems[index].client = value;
+    newItems[index].client = value.toUpperCase();
     setItems(newItems);
   };
 
@@ -81,6 +85,21 @@ export const GenericEntryForm = ({
   };
 
   const handleSave = async () => {
+    const hasErrors = items.some(
+      (i) =>
+        i.partNumber !== "" &&
+        (i.quantity <= 0 ||
+          (isManualClient &&
+            isManualClient(i.partNumber) &&
+            i.client.trim() === "")),
+    );
+
+    if (hasErrors) {
+      return toast.error(
+        "Revisa que no haya cantidades en 0 o clientes sin asignar.",
+      );
+    }
+
     const data = {
       lineId: lineId,
       details: items.filter((i) => i.partNumber !== "" && i.quantity > 0),
@@ -98,14 +117,14 @@ export const GenericEntryForm = ({
         <button
           onClick={() => navigate(exitUrl)}
           className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg 
-          font-semibold hover:bg-blue-100 transition-colors shadow-sm"
+          font-semibold hover:bg-blue-100 transition-colors shadow-sm cursor-pointer"
         >
           <LogIn size={18} /> Ir a Salidas
         </button>
         <button
           onClick={() => navigate(dbUrl)}
           className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg 
-          font-semibold hover:bg-slate-900 transition-colors shadow-sm"
+          font-semibold hover:bg-slate-900 transition-colors shadow-sm cursor-pointer"
         >
           <DatabaseIcon size={18} /> Base de Datos
         </button>
@@ -167,7 +186,7 @@ export const GenericEntryForm = ({
           type="button"
           className="w-full py-4 border-2 border-dashed border-slate-200 rounded-2xl 
           text-slate-400 hover:border-blue-300 hover:text-blue-500 hover:bg-blue-50/50 
-          transition-all flex items-center justify-center gap-2 font-medium"
+          transition-all flex items-center justify-center gap-2 font-medium cursor-pointer"
         >
           <Plus size={20} /> Agregar más filas de escaneo
         </button>
@@ -179,7 +198,7 @@ export const GenericEntryForm = ({
           disabled={isSubmitting}
           className="flex items-center gap-3 bg-slate-900 text-white px-10 py-4 rounded-2xl 
           font-bold shadow-2xl shadow-slate-300 hover:bg-black active:scale-95 transition-all 
-          disabled:opacity-50"
+          disabled:opacity-50 cursor-pointer"
         >
           <Save size={22} />
           {isSubmitting ? "GUARDANDO..." : "GUARDAR ENTRADA"}
