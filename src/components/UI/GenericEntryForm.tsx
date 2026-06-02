@@ -40,8 +40,24 @@ export const GenericEntryForm = ({
     year: "numeric",
   });
 
+  const [shopOrders, setShopOrders] = useState<string[]>([
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ]);
+
   const [items, setItems] = useState(createEmptyRows(INITIAL_ROWS));
   const quantityRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const handleShopOrderChange = (index: number, value: string) => {
+    const newOrders = [...shopOrders];
+    newOrders[index] = value;
+
+    setShopOrders(newOrders);
+  };
 
   const handlePartNumberChange = (index: number, value: string) => {
     const newItems = [...items];
@@ -85,6 +101,10 @@ export const GenericEntryForm = ({
   };
 
   const handleSave = async () => {
+    if (lineId === 4 && shopOrders[0].trim() === "") {
+      return toast.error("La shop order es obligatoria para la Linea 4");
+    }
+
     const hasErrors = items.some(
       (i) =>
         i.partNumber !== "" &&
@@ -102,12 +122,20 @@ export const GenericEntryForm = ({
 
     const data = {
       lineId: lineId,
+      shopOrder: shopOrders[0].trim() || undefined,
+      shopOrder2: shopOrders[1].trim() || undefined,
+      shopOrder3: shopOrders[2].trim() || undefined,
+      shopOrder4: shopOrders[3].trim() || undefined,
+      shopOrder5: shopOrders[4].trim() || undefined,
+      shopOrder6: shopOrders[5].trim() || undefined,
       details: items.filter((i) => i.partNumber !== "" && i.quantity > 0),
     };
 
     const success = await submitEntry(data);
     if (success) {
       setItems(createEmptyRows(INITIAL_ROWS));
+
+      setShopOrders(["", "", "", "", "", ""]);
     }
   };
 
@@ -135,6 +163,43 @@ export const GenericEntryForm = ({
           <FormField label="Fecha" value={today} readonly />
           <FormField label="Línea" value={lineName} readonly />
         </div>
+
+        {lineId === 4 && (
+          <div className="border-t border-slate-100 pt-5">
+            <h4
+              className="text-[11px] font-black text-slate-400 uppercase 
+              tracking-widest mb-4"
+            >
+              Shop Orders
+            </h4>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {shopOrders.map((so, i) => (
+                <div key={i} className="flex flex-col gap-1.5">
+                  <label
+                    className={`text-[10px] font-bold uppercase tracking-wider ml-1 ${
+                      i === 0 ? "text-blue-600" : "text-slate-400"
+                    }`}
+                  >
+                    Shop Order {i + 1} {i === 0 ? "(Requerida)" : "(Opcional)"}
+                  </label>
+                  <input
+                    className={`px-4 py-2.5 rounded-xl border-2 outline-none 
+                      transition-all font-bold text-sm ${
+                        i === 0
+                          ? "border-blue-100 bg-blue-50/50 text-slate-700 focus:border-blue-500"
+                          : "border-slate-200 bg-slate-50 text-slate-600 focus:border-blue-400 focus:bg-white"
+                      }
+                    `}
+                    placeholder={`Escanear SO ${i + 1}`}
+                    value={so}
+                    onChange={(e) => handleShopOrderChange(i, e.target.value)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       <section className="space-y-4">
