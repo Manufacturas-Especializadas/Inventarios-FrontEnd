@@ -11,6 +11,9 @@ import { DatabaseView6 } from "../pages/Line6/DatabaseView6";
 import { EntryForm4 } from "../pages/Line4/EntryForm4";
 import { DatabaseView4 } from "../pages/Line4/DatabaseView4";
 import { ExitForm4 } from "../pages/Line4/ExitForm4";
+import { EntryForm3 } from "../pages/Line3/EntryForm3";
+import { ExitForm3 } from "../pages/Line3/ExitForm3";
+import { DatabaseView3 } from "../pages/Line3/DatabaseView3";
 
 export const MyRoutes = () => {
   return (
@@ -18,6 +21,10 @@ export const MyRoutes = () => {
       <Route path="/" element={<EntryForm10 />} />
       <Route path="/salidas-l10" element={<ExitForm10 />} />
       <Route path="/base-de-datos-l10" element={<DatabaseView10 />} />
+
+      <Route path="/entradas-linea-3" element={<EntryForm3 />} />
+      <Route path="/salidas-l3" element={<ExitForm3 />} />
+      <Route path="/base-de-datos-l3" element={<DatabaseView3 />} />
 
       <Route path="/entradas-linea-4" element={<EntryForm4 />} />
       <Route path="/salidas-l4" element={<ExitForm4 />} />
