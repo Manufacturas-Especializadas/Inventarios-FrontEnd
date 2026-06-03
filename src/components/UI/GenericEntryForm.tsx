@@ -164,7 +164,7 @@ export const GenericEntryForm = ({
           <FormField label="Línea" value={lineName} readonly />
         </div>
 
-        {[3, 4, 5].includes(lineId) && (
+        {[3, 4].includes(lineId) && (
           <div className="border-t border-slate-100 pt-5">
             <h4
               className="text-[11px] font-black text-slate-400 uppercase 
