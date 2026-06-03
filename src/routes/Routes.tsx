@@ -14,6 +14,9 @@ import { ExitForm4 } from "../pages/Line4/ExitForm4";
 import { EntryForm3 } from "../pages/Line3/EntryForm3";
 import { ExitForm3 } from "../pages/Line3/ExitForm3";
 import { DatabaseView3 } from "../pages/Line3/DatabaseView3";
+import { EntryForm9 } from "../pages/Line9/EntryForm9";
+import { ExitForm9 } from "../pages/Line9/ExitForm9";
+import { DatabaseView9 } from "../pages/Line9/DatabaseView9";
 
 export const MyRoutes = () => {
   return (
@@ -32,6 +35,10 @@ export const MyRoutes = () => {
 
       <Route path="/entradas-linea-6" element={<EntryForm6 />} />
       <Route path="/base-de-datos-l6" element={<DatabaseView6 />} />
+
+      <Route path="/entradas-linea-9" element={<EntryForm9 />} />
+      <Route path="/salidas-l9" element={<ExitForm9 />} />
+      <Route path="/base-de-datos-l9" element={<DatabaseView9 />} />
 
       <Route path="/entradas-linea-12" element={<L12EntryForm />} />
       <Route path="/salidas-l12" element={<L12ExitForm />} />
