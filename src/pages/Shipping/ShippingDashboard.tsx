@@ -98,7 +98,7 @@ export const ShippingDashboard = () => {
   ) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      const barcode = scanValue.trim().toUpperCase();
+      const barcode = scanValue.replace(/'/g, "-").trim().toUpperCase();
       setScanValue("");
 
       if (barcode !== activeRelease?.partNumber) {
