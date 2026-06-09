@@ -21,6 +21,7 @@ import { ExitForm8 } from "../pages/Line8/ExitForm8";
 import { EntryForm8 } from "../pages/Line8/EntryForm8";
 import { DatabaseView8 } from "../pages/Line8/DatabaseView8";
 import { EntryFormMicroChannel } from "../pages/MicroChannel/EntryFormMicroChannel";
+import { ExitFormMicroChannel } from "../pages/MicroChannel/ExitFormMicroChannel";
 
 export const MyRoutes = () => {
   return (
@@ -56,6 +57,8 @@ export const MyRoutes = () => {
         path="/entradas-microchannel"
         element={<EntryFormMicroChannel />}
       />
+
+      <Route path="/salidas-microchannel" element={<ExitFormMicroChannel />} />
 
       <Route path="/embarques" element={<ShippingDashboard />} />
     </Routes>
