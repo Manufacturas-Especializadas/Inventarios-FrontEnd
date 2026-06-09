@@ -31,7 +31,7 @@ export const API_CONFIG = {
       release: "/api/Shipping/Release",
       releaseId: "/api/Shipping/Release/",
     },
-    microchanlle: {
+    microchannel: {
       register: "/api/Microchannel/register",
     },
   },
