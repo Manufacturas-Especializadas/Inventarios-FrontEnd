@@ -45,6 +45,14 @@ export const DatabaseViewMicrochannel = () => {
     setCurrentPage(1);
   }, [searchTerm]);
 
+  const enMesaCount = data.filter(
+    (item) => item.status === "EN MESA" || item.status === "ADENTRO",
+  ).length;
+  const fueraCount = data.filter(
+    (item) => item.status === "FUERA DE MESA" || item.status === "AFUERA",
+  ).length;
+  const totalCount = data.length;
+
   const filteredData = data.filter(
     (item) =>
       item.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -54,7 +62,7 @@ export const DatabaseViewMicrochannel = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return "---";
@@ -72,8 +80,8 @@ export const DatabaseViewMicrochannel = () => {
   return (
     <div className="max-w-7xl mx-auto space-y-6 pb-20 select-none">
       <div
-        className="flex flex-col md:flex-row md:items-center justify-between 
-        gap-4 pb-4 border-b border-slate-200"
+        className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 
+        border-b border-slate-200"
       >
         <div className="flex items-center gap-3">
           <div
@@ -111,6 +119,68 @@ export const DatabaseViewMicrochannel = () => {
         </div>
       </div>
 
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div
+          className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm 
+          flex items-center gap-4"
+        >
+          <div
+            className="w-14 h-14 rounded-2xl bg-slate-50 text-slate-500 flex 
+            items-center justify-center border border-slate-100"
+          >
+            <Box size={28} />
+          </div>
+          <div>
+            <p className="text-xs font-black text-slate-400 uppercase tracking-widest">
+              Total
+            </p>
+            <p className="text-3xl font-black text-slate-800 leading-none mt-1">
+              {isLoading ? "-" : totalCount}
+            </p>
+          </div>
+        </div>
+
+        <div
+          className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm 
+          flex items-center gap-4"
+        >
+          <div
+            className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-500 flex 
+            items-center justify-center border border-emerald-100"
+          >
+            <ArrowDownRight size={28} />
+          </div>
+          <div>
+            <p className="text-xs font-black text-emerald-600 uppercase tracking-widest">
+              Actualmente en MESA
+            </p>
+            <p className="text-3xl font-black text-slate-800 leading-none mt-1">
+              {isLoading ? "-" : enMesaCount}
+            </p>
+          </div>
+        </div>
+
+        <div
+          className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm 
+          flex items-center gap-4"
+        >
+          <div
+            className="w-14 h-14 rounded-2xl bg-orange-50 text-orange-500 flex 
+            items-center justify-center border border-orange-100"
+          >
+            <ArrowUpRight size={28} />
+          </div>
+          <div>
+            <p className="text-xs font-black text-orange-600 uppercase tracking-widest">
+              Fuera de MESA
+            </p>
+            <p className="text-3xl font-black text-slate-800 leading-none mt-1">
+              {isLoading ? "-" : fueraCount}
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section
         className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm 
         flex items-center gap-4"
@@ -130,10 +200,13 @@ export const DatabaseViewMicrochannel = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <div className="hidden md:flex items-center gap-2 px-4 py-3 bg-slate-50 rounded-xl border border-slate-200">
-          <Box size={18} className="text-slate-400" />
+        <div
+          className="hidden md:flex items-center gap-2 px-4 py-3 bg-slate-50 
+          rounded-xl border border-slate-200"
+        >
+          <Search size={18} className="text-slate-400" />
           <span className="font-bold text-slate-600">
-            {filteredData.length} Registros totales
+            {filteredData.length} Resultados
           </span>
         </div>
       </section>
@@ -147,32 +220,32 @@ export const DatabaseViewMicrochannel = () => {
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
                 <th
-                  className="px-6 py-4 text-xs font-black text-slate-400 
-                  uppercase tracking-wider"
+                  className="px-6 py-4 text-xs font-black text-slate-400 uppercase 
+                  tracking-wider"
                 >
                   ID
                 </th>
                 <th
-                  className="px-6 py-4 text-xs font-black text-slate-400 
-                  uppercase tracking-wider"
+                  className="px-6 py-4 text-xs font-black text-slate-400 uppercase 
+                  tracking-wider"
                 >
                   Contenedor
                 </th>
                 <th
-                  className="px-6 py-4 text-xs font-black text-slate-400 
-                  uppercase tracking-wider"
+                  className="px-6 py-4 text-xs font-black text-slate-400 uppercase 
+                  tracking-wider"
                 >
                   Estatus
                 </th>
                 <th
-                  className="px-6 py-4 text-xs font-black text-slate-400 
-                  uppercase tracking-wider"
+                  className="px-6 py-4 text-xs font-black text-slate-400 uppercase 
+                  tracking-wider"
                 >
                   Fecha Entrada
                 </th>
                 <th
-                  className="px-6 py-4 text-xs font-black text-slate-400 
-                  uppercase tracking-wider"
+                  className="px-6 py-4 text-xs font-black text-slate-400 uppercase 
+                  tracking-wider"
                 >
                   Fecha Salida
                 </th>
@@ -225,14 +298,14 @@ export const DatabaseViewMicrochannel = () => {
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full 
-                          text-xs font-black tracking-wide ${
-                            row.status === "ADENTRO"
-                              ? "bg-emerald-100 text-emerald-700"
-                              : "bg-slate-100 text-slate-500"
-                          }`}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black tracking-wide ${
+                          row.status === "EN MESA" || row.status === "ADENTRO"
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-slate-100 text-slate-500"
+                        }`}
                       >
-                        {row.status === "ADENTRO" ? (
+                        {row.status === "EN MESA" ||
+                        row.status === "ADENTRO" ? (
                           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                         ) : (
                           <div className="w-1.5 h-1.5 rounded-full bg-slate-400" />
