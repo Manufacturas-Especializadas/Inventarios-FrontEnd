@@ -20,6 +20,7 @@ import { DatabaseView9 } from "../pages/Line9/DatabaseView9";
 import { ExitForm8 } from "../pages/Line8/ExitForm8";
 import { EntryForm8 } from "../pages/Line8/EntryForm8";
 import { DatabaseView8 } from "../pages/Line8/DatabaseView8";
+import { EntryFormMicroChannel } from "../pages/MicroChannel/EntryFormMicroChannel";
 
 export const MyRoutes = () => {
   return (
@@ -50,6 +51,11 @@ export const MyRoutes = () => {
       <Route path="/entradas-linea-12" element={<L12EntryForm />} />
       <Route path="/salidas-l12" element={<L12ExitForm />} />
       <Route path="/base-de-datos-l12" element={<DatabaseView12 />} />
+
+      <Route
+        path="/entradas-microchannel"
+        element={<EntryFormMicroChannel />}
+      />
 
       <Route path="/embarques" element={<ShippingDashboard />} />
     </Routes>
