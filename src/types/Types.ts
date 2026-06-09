@@ -184,3 +184,21 @@ export interface FtnBalanceItem {
   createdAt: string;
   clearedAt: string | null;
 }
+
+export interface MicroChannel {
+  code: string;
+  typeMovement: string;
+}
+
+export interface MicroChannelList {
+  id: number;
+  company: string;
+  area: string;
+  description: string;
+  line: string;
+  code: string;
+  status: string;
+  createdAt: string;
+  entryDate: string;
+  exitDate: string;
+}
