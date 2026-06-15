@@ -95,7 +95,7 @@ export const DatabaseViewMicrochannel = () => {
               Base de Datos
             </h2>
             <p className="text-sm font-medium text-slate-500">
-              Línea 6 - Historial de Separadores Microchannel
+              Línea 6 - Historial de Contenedores Microchannel
             </p>
           </div>
         </div>
