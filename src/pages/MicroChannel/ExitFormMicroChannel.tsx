@@ -138,6 +138,7 @@ export const ExitFormMicroChannel = () => {
         toast.success("Todas las salidas registradas con éxito.", {
           id: loadingToast,
         });
+        setTripNumber("");
         setTimeout(() => codeRefs.current[0]?.focus(), 100);
       } else {
         toast.dismiss(loadingToast);
