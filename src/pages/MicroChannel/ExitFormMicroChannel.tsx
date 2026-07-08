@@ -1,6 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
-import { ArrowLeft, DatabaseIcon, LogIn, Plus, Save } from "lucide-react";
+import {
+  ArrowLeft,
+  DatabaseIcon,
+  LogIn,
+  Plus,
+  Save,
+  Truck,
+} from "lucide-react";
 import { FormField } from "../../components/FormField/FormField";
 import { useMicroChannel } from "../../hooks/usoMicroChannel";
 import toast from "react-hot-toast";
@@ -16,6 +23,7 @@ export const ExitFormMicroChannel = () => {
   const { registerScan, isSubmitting } = useMicroChannel();
 
   const [items, setItems] = useState(createEmptyRows(INITIAL_ROWS));
+  const [tripNumber, setTripNumber] = useState("");
   const codeRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const today = new Date().toLocaleDateString("es-Mx", {
@@ -101,6 +109,12 @@ export const ExitFormMicroChannel = () => {
       return toast.error("No hay códigos válidos para guardar.");
     }
 
+    if (!tripNumber || tripNumber.trim() === "") {
+      return toast.error(
+        "El número de viaje es obligatorio para registrar la salida",
+      );
+    }
+
     const loadingToast = toast.loading(
       `Procesando ${validItems.length} contenedores...`,
     );
@@ -111,7 +125,11 @@ export const ExitFormMicroChannel = () => {
     try {
       for (let i = 0; i < items.length; i++) {
         if (items[i].code.trim() !== "") {
-          const result = await registerScan(items[i].code, "SALIDA");
+          const result = await registerScan(
+            items[i].code,
+            "SALIDA",
+            Number(tripNumber),
+          );
 
           if (result.success) {
             newItems[i].code = "";
@@ -127,6 +145,7 @@ export const ExitFormMicroChannel = () => {
         toast.success("Todas las salidas registradas con éxito.", {
           id: loadingToast,
         });
+        setTripNumber("");
         setTimeout(() => codeRefs.current[0]?.focus(), 100);
       } else {
         toast.dismiss(loadingToast);
@@ -172,6 +191,24 @@ export const ExitFormMicroChannel = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
           <FormField label="Fecha" value={today} readonly />
           <FormField label="Línea" value="LÍNEA 6 - MICROCHANNEL" readonly />
+
+          <div className="flex flex-col gap-1 w-full">
+            <label
+              className="text-[10px] font-bold text-orange-500 uppercase ml-1 flex
+              items-center gap-1"
+            >
+              <Truck size={12} /> Número de viaje
+            </label>
+            <input
+              type="number"
+              value={tripNumber}
+              onChange={(e) => setTripNumber(e.target.value)}
+              disabled={isSubmitting}
+              className="w-full bg-slate-50 p-2.5 rounded-lg text-sm font-bold text-slate-800 
+              outline-none transition-all focus:ring-2 focus:ring-orange-500 border border-slate-200
+              placeholder:text-slate-300 placeholder:font-medium disabled:opacity-50"
+            />
+          </div>
         </div>
       </section>
 

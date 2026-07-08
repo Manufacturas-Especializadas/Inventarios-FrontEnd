@@ -7,6 +7,7 @@ export const useMicroChannel = () => {
   const registerScan = async (
     code: string,
     typeMovement: "ENTRADA" | "SALIDA",
+    tripNumber: number,
   ) => {
     setIsSubmitting(true);
 
@@ -14,6 +15,7 @@ export const useMicroChannel = () => {
       await microChannelService.register({
         code,
         typeMovement,
+        tripNumber,
       });
 
       return { success: true };
