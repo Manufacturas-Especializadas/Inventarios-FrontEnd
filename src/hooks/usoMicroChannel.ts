@@ -7,7 +7,7 @@ export const useMicroChannel = () => {
   const registerScan = async (
     code: string,
     typeMovement: "ENTRADA" | "SALIDA",
-    tripNumber: number,
+    tripNumber?: number,
   ) => {
     setIsSubmitting(true);
 

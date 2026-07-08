@@ -188,7 +188,7 @@ export interface FtnBalanceItem {
 export interface MicroChannel {
   code: string;
   typeMovement: string;
-  tripNumber: number;
+  tripNumber?: number;
 }
 
 export interface MicroChannelList {
