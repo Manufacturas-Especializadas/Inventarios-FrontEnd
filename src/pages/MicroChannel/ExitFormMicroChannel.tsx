@@ -102,6 +102,12 @@ export const ExitFormMicroChannel = () => {
       return toast.error("No hay códigos válidos para guardar.");
     }
 
+    if (!tripNumber || tripNumber.trim() === "") {
+      return toast.error(
+        "El número de viaje es obligatorio para registrar la salida",
+      );
+    }
+
     const loadingToast = toast.loading(
       `Procesando ${validItems.length} contenedores...`,
     );
