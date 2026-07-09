@@ -198,6 +198,11 @@ export interface ScanPayload {
   payRollNumber?: number;
 }
 
+export interface DesactivatePayload {
+  code: string;
+  reason: string;
+}
+
 export interface MicroChannelList {
   id: number;
   company: string;
