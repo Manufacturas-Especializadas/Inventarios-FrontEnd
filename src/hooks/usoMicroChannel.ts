@@ -8,6 +8,7 @@ export const useMicroChannel = () => {
     code: string,
     typeMovement: "ENTRADA" | "SALIDA",
     tripNumber?: number,
+    payRollNumber?: number,
   ) => {
     setIsSubmitting(true);
 
@@ -16,6 +17,7 @@ export const useMicroChannel = () => {
         code,
         typeMovement,
         tripNumber,
+        payRollNumber,
       });
 
       return { success: true };
