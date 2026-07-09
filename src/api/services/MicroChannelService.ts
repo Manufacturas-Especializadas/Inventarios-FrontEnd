@@ -1,9 +1,5 @@
 import { API_CONFIG } from "../../config/api";
-import type {
-  DesactivatePayload,
-  MicroChannel,
-  MicroChannelList,
-} from "../../types/Types";
+import type { MicroChannel, MicroChannelList } from "../../types/Types";
 import { apiClient } from "../client";
 
 class MicroChannelService {
@@ -19,7 +15,7 @@ class MicroChannelService {
     return apiClient.post<void>(this.registerEndpoint, data);
   }
 
-  async desactivate(data: DesactivatePayload): Promise<void> {
+  async deactivate(data: { code: string; reason: string }): Promise<void> {
     return apiClient.post<void>(this.desactivateEndpoint, data);
   }
 }
