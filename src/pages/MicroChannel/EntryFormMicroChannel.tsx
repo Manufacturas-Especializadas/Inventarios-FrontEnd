@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import {
   ArrowRight,
   DatabaseIcon,
-  LogOut,
+  // LogOut,
   PersonStanding,
   Plus,
   Save,
@@ -169,13 +169,13 @@ export const EntryFormMicroChannel = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-20 select-none">
       <div className="flex justify-end gap-3 pb-2 border-b border-slate-200">
-        <button
+        {/* <button
           onClick={() => navigate("/salidas-microchannel")}
           className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600 rounded-lg 
           font-semibold hover:bg-orange-100 transition-colors shadow-sm cursor-pointer"
         >
           <LogOut size={18} /> Ir a Salidas
-        </button>
+        </button> */}
         <button
           onClick={() => navigate("/base-de-datos-microchannel")}
           className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg 
