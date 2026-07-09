@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { microChannelService } from "../api/services/MicroChannelService";
 import type { MicroChannelList, ScanPayload } from "../types/Types";
 
@@ -6,6 +6,23 @@ export const useMicroChannel = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingList, setIsLoadingList] = useState(false);
   const [containersList, setContainersList] = useState<MicroChannelList[]>([]);
+
+  const fetchContainers = useCallback(async () => {
+    setIsLoadingList(true);
+    try {
+      const data = await microChannelService.getList();
+      setContainersList(data);
+      return { success: true, data };
+    } catch (error: any) {
+      console.error("Error cargando la lista:", error);
+      return {
+        success: false,
+        errorMessage: "Error al cargar la base de datos.",
+      };
+    } finally {
+      setIsLoadingList(false);
+    }
+  }, []);
 
   const registerScan = async (payload: ScanPayload) => {
     setIsSubmitting(true);
