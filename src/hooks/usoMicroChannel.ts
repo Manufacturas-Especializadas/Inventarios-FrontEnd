@@ -1,6 +1,10 @@
 import { useCallback, useState } from "react";
 import { microChannelService } from "../api/services/MicroChannelService";
-import type { MicroChannelList, ScanPayload } from "../types/Types";
+import type {
+  DesactivatePayload,
+  MicroChannelList,
+  ScanPayload,
+} from "../types/Types";
 
 export const useMicroChannel = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,6 +42,26 @@ export const useMicroChannel = () => {
       return {
         success: false,
         errorMessage: `${payload.code}: ${errorMessage}`,
+      };
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const deactivateContainer = async (payload: DesactivatePayload) => {
+    setIsSubmitting(true);
+    try {
+      await microChannelService.deactivate(payload);
+      return { success: true };
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.Message ||
+        error.message ||
+        "Error al desactivar el contenedor.";
+      return {
+        success: false,
+        errorMessage: `${errorMessage}`,
       };
     } finally {
       setIsSubmitting(false);
