@@ -102,6 +102,12 @@ export const EntryFormMicroChannel = () => {
       return toast.error("No hay códigos válidos para guardar.");
     }
 
+    if (!payRollNumber || payRollNumber.trim() === "") {
+      return toast.error(
+        "El número de nómina es requerido para registar entradas",
+      );
+    }
+
     const loadingToast = toast.loading(
       `Procesando entrada de ${validItems.length} contenedores...`,
     );
