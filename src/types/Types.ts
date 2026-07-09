@@ -216,4 +216,6 @@ export interface MicroChannelList {
   createdAt: string;
   entryDate: string;
   exitDate: string;
+  reasonForDeactivation: string;
+  isActive: boolean;
 }
