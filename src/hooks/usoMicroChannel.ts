@@ -1,36 +1,25 @@
 import { useState } from "react";
 import { microChannelService } from "../api/services/MicroChannelService";
+import type { ScanPayload } from "../types/Types";
 
 export const useMicroChannel = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const registerScan = async (
-    code: string,
-    typeMovement: "ENTRADA" | "SALIDA",
-    tripNumber?: number,
-    payRollNumber?: number,
-  ) => {
+  const registerScan = async (payload: ScanPayload) => {
     setIsSubmitting(true);
-
     try {
-      await microChannelService.register({
-        code,
-        typeMovement,
-        tripNumber,
-        payRollNumber,
-      });
-
+      await microChannelService.register(payload);
       return { success: true };
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message ||
         error.response?.data?.Message ||
         error.message ||
-        "Error de conexión con la base de datos.";
-
-      console.error("Detalle del error:", errorMessage);
-
-      return { success: false, errorMessage: `${code}: ${errorMessage}` };
+        "Error de conexión.";
+      return {
+        success: false,
+        errorMessage: `${payload.code}: ${errorMessage}`,
+      };
     } finally {
       setIsSubmitting(false);
     }
