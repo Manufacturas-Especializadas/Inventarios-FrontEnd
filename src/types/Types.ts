@@ -191,6 +191,12 @@ export interface MicroChannel {
   tripNumber?: number;
   payRollNumber?: number;
 }
+export interface ScanPayload {
+  code: string;
+  typeMovement: "ENTRADA" | "SALIDA";
+  tripNumber?: number;
+  payRollNumber?: number;
+}
 
 export interface MicroChannelList {
   id: number;
