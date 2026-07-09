@@ -189,6 +189,7 @@ export interface MicroChannel {
   code: string;
   typeMovement: string;
   tripNumber?: number;
+  payRollNumber?: number;
 }
 
 export interface MicroChannelList {
