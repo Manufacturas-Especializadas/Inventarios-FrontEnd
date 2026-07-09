@@ -205,6 +205,8 @@ export interface MicroChannelList {
   description: string;
   line: string;
   code: string;
+  tripNumber: number;
+  payRollNumber: number;
   status: string;
   createdAt: string;
   entryDate: string;

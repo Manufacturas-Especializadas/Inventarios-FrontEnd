@@ -83,6 +83,18 @@ export const DataTable = ({
               >
                 Fecha Salida
               </th>
+              <th
+                className="px-6 py-4 text-xs font-black text-slate-400 uppercase 
+                tracking-wider"
+              >
+                Número de nómina
+              </th>
+              <th
+                className="px-6 py-4 text-xs font-black text-slate-400 uppercase 
+                tracking-wider"
+              >
+                Número de viaje
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -165,6 +177,12 @@ export const DataTable = ({
                         </span>
                       )}
                     </div>
+                  </td>
+                  <td className="px-6 py-4 text-sm font-bold text-slate-400">
+                    {row.payRollNumber}
+                  </td>
+                  <td className="px-6 py-4 text-sm font-bold text-slate-400">
+                    {row.tripNumber}
                   </td>
                 </tr>
               ))
