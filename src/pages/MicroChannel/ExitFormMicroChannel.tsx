@@ -125,11 +125,11 @@ export const ExitFormMicroChannel = () => {
     try {
       for (let i = 0; i < items.length; i++) {
         if (items[i].code.trim() !== "") {
-          const result = await registerScan(
-            items[i].code,
-            "SALIDA",
-            Number(tripNumber),
-          );
+          const result = await registerScan({
+            code: items[i].code,
+            typeMovement: "SALIDA",
+            tripNumber: Number(tripNumber),
+          });
 
           if (result.success) {
             newItems[i].code = "";
