@@ -68,5 +68,12 @@ export const useMicroChannel = () => {
     }
   };
 
-  return { registerScan, isSubmitting };
+  return {
+    registerScan,
+    deactivateContainer,
+    fetchContainers,
+    containersList,
+    isLoadingList,
+    isSubmitting,
+  };
 };
