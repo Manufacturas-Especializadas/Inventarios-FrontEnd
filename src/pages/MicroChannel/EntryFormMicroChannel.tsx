@@ -138,6 +138,7 @@ export const EntryFormMicroChannel = () => {
         toast.success("Todas las entradas registradas con éxito.", {
           id: loadingToast,
         });
+        setPayRollNumber("");
         setTimeout(() => codeRefs.current[0]?.focus(), 100);
       } else {
         toast.error(
