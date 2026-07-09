@@ -23,6 +23,7 @@ import { DatabaseView8 } from "../pages/Line8/DatabaseView8";
 import { EntryFormMicroChannel } from "../pages/MicroChannel/EntryFormMicroChannel";
 import { ExitFormMicroChannel } from "../pages/MicroChannel/ExitFormMicroChannel";
 import { DatabaseViewMicrochannel } from "../pages/MicroChannel/DatabaseViewMicrochannel";
+import { AdminPanel } from "../pages/MicroChannel/AdminPanel";
 
 export const MyRoutes = () => {
   return (
@@ -63,6 +64,8 @@ export const MyRoutes = () => {
         path="/base-de-datos-microchannel"
         element={<DatabaseViewMicrochannel />}
       />
+
+      <Route path="/admin-microchannel" element={<AdminPanel />} />
 
       <Route path="/embarques" element={<ShippingDashboard />} />
     </Routes>
