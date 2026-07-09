@@ -118,7 +118,11 @@ export const EntryFormMicroChannel = () => {
     try {
       for (let i = 0; i < items.length; i++) {
         if (items[i].code.trim() !== "") {
-          const result = await registerScan(items[i].code, "ENTRADA");
+          const result = await registerScan(
+            items[i].code,
+            "ENTRADA",
+            Number(payRollNumber),
+          );
 
           if (result.success) {
             newItems[i].code = "";
