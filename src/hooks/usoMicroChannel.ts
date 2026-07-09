@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { microChannelService } from "../api/services/MicroChannelService";
-import type { ScanPayload } from "../types/Types";
+import type { MicroChannelList, ScanPayload } from "../types/Types";
 
 export const useMicroChannel = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingList, setIsLoadingList] = useState(false);
+  const [containersList, setContainersList] = useState<MicroChannelList[]>([]);
 
   const registerScan = async (payload: ScanPayload) => {
     setIsSubmitting(true);
