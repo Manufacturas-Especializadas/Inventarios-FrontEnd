@@ -34,6 +34,7 @@ export const API_CONFIG = {
     microchannel: {
       recent: "/api/Microchannel/recent",
       register: "/api/Microchannel/register",
+      desactivate: "/api/Microchannel/deactivate",
     },
   },
 };
