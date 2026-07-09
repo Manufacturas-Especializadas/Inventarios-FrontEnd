@@ -16,6 +16,7 @@ export const EntryFormMicroChannel = () => {
   const { registerScan, isSubmitting } = useMicroChannel();
 
   const [items, setItems] = useState(createEmptyRows(INITIAL_ROWS));
+  const [payRollNumber, setPayRollNumber] = useState("");
   const codeRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const today = new Date().toLocaleDateString("es-Mx", {
