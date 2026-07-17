@@ -24,6 +24,7 @@ export const EntryFormMicroChannel = () => {
 
   const [items, setItems] = useState(createEmptyRows(INITIAL_ROWS));
   const [payRollNumber, setPayRollNumber] = useState("");
+  const [apiErrors, setApiErrors] = useState<string[]>([]);
   const codeRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const today = new Date().toLocaleDateString("es-Mx", {
