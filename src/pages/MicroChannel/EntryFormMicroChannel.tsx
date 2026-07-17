@@ -122,6 +122,8 @@ export const EntryFormMicroChannel = () => {
     let hasErrors = false;
     const newItems = [...items];
 
+    const errorMessages: string[] = [];
+
     try {
       for (let i = 0; i < items.length; i++) {
         if (items[i].code.trim() !== "") {
@@ -135,6 +137,10 @@ export const EntryFormMicroChannel = () => {
             newItems[i].code = "";
           } else {
             hasErrors = true;
+            errorMessages.push(
+              result.errorMessage ||
+                `Error desconocido en el contenedor ${items[i].code}`,
+            );
           }
         }
       }
@@ -148,13 +154,11 @@ export const EntryFormMicroChannel = () => {
         setPayRollNumber("");
         setTimeout(() => codeRefs.current[0]?.focus(), 100);
       } else {
-        toast.error(
-          "Atención: Los códigos que quedaron en pantalla tienen problemas.",
-          {
-            id: loadingToast,
-            duration: 5000,
-          },
-        );
+        toast.dismiss(loadingToast);
+
+        errorMessages.forEach((msg) => {
+          toast.error(msg, { duration: 6000 });
+        });
 
         const firstErrorIndex = newItems.findIndex((i) => i.code.trim() !== "");
         if (firstErrorIndex !== -1) {
