@@ -104,6 +104,7 @@ export const EntryFormMicroChannel = () => {
   };
 
   const handleSave = async () => {
+    setApiErrors([]);
     const validItems = items.filter((i) => i.code.trim() !== "");
 
     if (validItems.length === 0) {
