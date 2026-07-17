@@ -24,6 +24,7 @@ export const ExitFormMicroChannel = () => {
 
   const [items, setItems] = useState(createEmptyRows(INITIAL_ROWS));
   const [tripNumber, setTripNumber] = useState("");
+  const [apiErrors, setApiErrors] = useState<string[]>([]);
   const codeRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const today = new Date().toLocaleDateString("es-Mx", {
