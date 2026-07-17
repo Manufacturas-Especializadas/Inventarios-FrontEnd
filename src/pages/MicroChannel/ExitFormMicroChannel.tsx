@@ -153,9 +153,7 @@ export const ExitFormMicroChannel = () => {
       } else {
         toast.dismiss(loadingToast);
 
-        toast.error(`Atención: ${errors.length} contenedores fallaron.`, {
-          duration: 5000,
-        });
+        setApiErrors(errors);
 
         errors.forEach((err) => {
           toast.error(err, { duration: 6000 });
