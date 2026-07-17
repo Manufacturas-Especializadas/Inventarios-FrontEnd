@@ -158,6 +158,8 @@ export const EntryFormMicroChannel = () => {
       } else {
         toast.dismiss(loadingToast);
 
+        setApiErrors(errorMessages);
+
         errorMessages.forEach((msg) => {
           toast.error(msg, { duration: 6000 });
         });
