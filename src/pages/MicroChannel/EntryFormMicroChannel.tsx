@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import {
+  AlertCircle,
   ArrowRight,
   DatabaseIcon,
   // LogOut,
   PersonStanding,
   Plus,
   Save,
+  X,
 } from "lucide-react";
 import { FormField } from "../../components/FormField/FormField";
 import toast from "react-hot-toast";
@@ -192,6 +194,37 @@ export const EntryFormMicroChannel = () => {
           <DatabaseIcon size={18} /> Base de Datos
         </button>
       </div>
+
+      {apiErrors.length > 0 && (
+        <div className="bg-red-50 border border-red-200 p-4 rounded-2xl shadow-sm">
+          <div className="flex justify-between items-start mb-2">
+            <div className="flex items-center gap-2 text-red-600">
+              <AlertCircle size={20} />
+              <h3 className="font-bold text-lg">
+                Atención: No todos los contenedores se guardaron
+              </h3>
+            </div>
+            <button
+              onClick={() => setApiErrors([])}
+              className="text-red-400 hover:text-red-600 transition-colors p-1 rounded-md hover:bg-red-100"
+            >
+              <X size={20} />
+            </button>
+          </div>
+          <p className="text-red-600 font-medium text-sm mb-3">
+            Por favor, revisa los siguientes problemas. Los códigos con error
+            permanecen en pantalla.
+          </p>
+          <ul className="space-y-1 ml-1 text-sm font-semibold text-red-700">
+            {apiErrors.map((err, index) => (
+              <li key={index} className="flex items-start gap-2">
+                <span className="text-red-400 mt-0.5">•</span>
+                {err}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <section className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
