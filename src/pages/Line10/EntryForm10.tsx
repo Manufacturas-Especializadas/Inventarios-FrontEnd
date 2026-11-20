@@ -2,7 +2,7 @@ import { GenericEntryForm } from "../../components/UI/GenericEntryForm";
 
 export const EntryForm10 = () => {
   const resolveClientL10 = (part: string) => {
-    if (part.startsWith("50HE") || part.startsWith("38AU")) return "CMX-D";
+    if (part.startsWith("50HE") || part.startsWith("38AU") || part.startsWith("40RU")) return "CMX-D";
     return "CMX-B";
   };
 

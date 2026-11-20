@@ -56,7 +56,7 @@ export const useExitForm = (lineId: number) => {
       return { client: "", isManual: false };
     }
 
-    if (upperPart.startsWith("50HE") || upperPart.startsWith("38AU")) {
+    if (upperPart.startsWith("50HE") || upperPart.startsWith("38AU") || (idLinea === 9 && upperPart.startsWith("40RU"))) {
       return { client: "CMX-D", isManual: false };
     }
     return { client: "CMX-B", isManual: false };
